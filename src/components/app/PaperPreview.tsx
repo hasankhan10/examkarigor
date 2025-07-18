@@ -35,7 +35,11 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
         const canvas = await html2canvas(paperContentElement, {
             scale: 2, // Increase scale for better resolution
             useCORS: true,
-            backgroundColor: '#0a0a0a', // Match dark theme background
+            backgroundColor: '#ffffff', // Use a white background for the PDF
+            onclone: (document) => {
+              // On the cloned document, add a class to the body to trigger print styles
+              document.body.classList.add('print-pdf');
+            }
         });
 
         const imgData = canvas.toDataURL('image/png');
@@ -51,18 +55,17 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
         const imgHeight = canvas.height;
         const ratio = imgWidth / imgHeight;
         const imgHeightOnPdf = pdfWidth / ratio;
-        let heightLeft = imgHeight;
-        
+        let heightLeft = imgHeightOnPdf;
         let position = 0;
 
-        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightOnPdf);
-        heightLeft -= pdf.internal.pageSize.getHeight() * (imgHeight/imgHeightOnPdf);
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeightOnPdf);
+        heightLeft -= pdfHeight;
 
         while (heightLeft > 0) {
-            position = heightLeft - imgHeight;
+            position -= pdfHeight;
             pdf.addPage();
             pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightOnPdf);
-            heightLeft -= pdf.internal.pageSize.getHeight() * (imgHeight/imgHeightOnPdf);
+            heightLeft -= pdfHeight;
         }
 
         pdf.save('question-paper.pdf');
@@ -124,7 +127,7 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
 
                       return (
                         <div key={type}>
-                          <h3 className="text-lg font-headline font-bold mb-3 p-2 bg-primary/10 rounded-md print-text-black">{groupName} <span className="text-sm font-normal text-muted-foreground">({group.length}টি প্রশ্ন, মোট {groupMarks} নম্বর)</span></h3>
+                          <h3 className="text-lg font-headline font-bold mb-3 p-2 bg-primary/10 rounded-md print-text-black">{groupName} <span className="text-sm font-normal text-muted-foreground print-text-black">({group.length}টি প্রশ্ন, মোট {groupMarks} নম্বর)</span></h3>
                           {group.map((q) => {
                              questionCounter++;
                              return (

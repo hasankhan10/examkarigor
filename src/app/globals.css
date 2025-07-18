@@ -86,6 +86,11 @@
   }
 }
 
+.print-pdf, .print-pdf * {
+  color: black !important;
+  background-color: white !important;
+}
+
 @media print {
   body {
     background-image: none !important;
