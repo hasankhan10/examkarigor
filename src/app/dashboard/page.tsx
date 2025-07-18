@@ -13,7 +13,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileSignature } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
 
 function DashboardComponent() {
@@ -21,6 +21,11 @@ function DashboardComponent() {
   const router = useRouter();
   const [config, setConfig] = useState<PaperConfig>(initialConfig);
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
@@ -120,42 +125,44 @@ function DashboardComponent() {
                 কাঠামো পরিবর্তন করুন
             </Button>
         </div>
-        <DragDropContext onDragEnd={onDragEnd}>
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-            <div className="lg:col-span-2 flex flex-col gap-8 no-print">
-                <Card className="border-primary/20 shadow-lg shadow-primary/5">
-                    <CardHeader className="pb-4">
-                        <div className="flex items-center gap-4">
-                        <FileSignature className="w-8 h-8 text-amber-400" />
-                        <div>
-                            <CardTitle className="font-headline text-2xl text-amber-400">আপনার কাঠামো</CardTitle>
-                            <CardDescription> বিষয়: {config.subject}, শ্রেণী: {config.class}, মোট নম্বর: {config.totalMarks}</CardDescription>
+        {isClient ? (
+            <DragDropContext onDragEnd={onDragEnd}>
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <div className="lg:col-span-2 flex flex-col gap-8 no-print">
+                    <Card className="border-primary/20 shadow-lg shadow-primary/5">
+                        <CardHeader className="pb-4">
+                            <div className="flex items-center gap-4">
+                            <FileSignature className="w-8 h-8 text-amber-400" />
+                            <div>
+                                <CardTitle className="font-headline text-2xl text-amber-400">আপনার কাঠামো</CardTitle>
+                                <CardDescription> বিষয়: {config.subject}, শ্রেণী: {config.class}, মোট নম্বর: {config.totalMarks}</CardDescription>
+                            </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent className='pt-0'>
+                        <div className='flex flex-wrap gap-2'>
+                            <Badge variant="secondary">MCQ: {config.mcqCount}</Badge>
+                            <Badge variant="secondary">SAQ: {config.saqCount}</Badge>
+                            <Badge variant="secondary">বড় প্রশ্ন: {config.longQuestionCount}</Badge>
                         </div>
-                        </div>
-                    </CardHeader>
-                    <CardContent className='pt-0'>
-                    <div className='flex flex-wrap gap-2'>
-                        <Badge variant="secondary">MCQ: {config.mcqCount}</Badge>
-                        <Badge variant="secondary">SAQ: {config.saqCount}</Badge>
-                        <Badge variant="secondary">বড় প্রশ্ন: {config.longQuestionCount}</Badge>
-                    </div>
-                    </CardContent>
-                </Card>
-                <QuestionBank
-                questions={filteredQuestions}
-                />
-            </div>
-            <div className="lg:col-span-3">
-                <PaperPreview
-                config={config}
-                questions={selectedQuestions}
-                onRemoveQuestion={handleRemoveQuestion}
-                onReset={handleReset}
-                onAddAiQuestions={handleAddAiQuestions}
-                />
-            </div>
-            </div>
-        </DragDropContext>
+                        </CardContent>
+                    </Card>
+                    <QuestionBank
+                    questions={filteredQuestions}
+                    />
+                </div>
+                <div className="lg:col-span-3">
+                    <PaperPreview
+                    config={config}
+                    questions={selectedQuestions}
+                    onRemoveQuestion={handleRemoveQuestion}
+                    onReset={handleReset}
+                    onAddAiQuestions={handleAddAiQuestions}
+                    />
+                </div>
+                </div>
+            </DragDropContext>
+        ) : null}
       </main>
     </div>
   );
