@@ -24,8 +24,11 @@ function DashboardComponent() {
 
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
-    if (Object.keys(params).length > 0) {
-      const newConfig = {
+    if (Object.keys(params).length > 0 && params.class) { // Check for a required param
+      const newConfig: PaperConfig = {
+        schoolName: params.schoolName || initialConfig.schoolName,
+        examTerm: params.examTerm || initialConfig.examTerm,
+        time: params.time || initialConfig.time,
         class: params.class || initialConfig.class,
         subject: params.subject || initialConfig.subject,
         chapter: params.chapter || initialConfig.chapter,
@@ -64,7 +67,10 @@ function DashboardComponent() {
   }, [config.subject, config.class, config.chapter]);
   
   const handleGoBack = () => {
-     const params = {
+     const params = new URLSearchParams({
+        schoolName: config.schoolName,
+        examTerm: config.examTerm,
+        time: config.time,
         class: config.class,
         subject: config.subject,
         chapter: config.chapter,
@@ -74,9 +80,8 @@ function DashboardComponent() {
         'saq.marks': String(config.saq.marks),
         'long.count': String(config.long.count),
         'long.marks': String(config.long.marks),
-    };
-    const query = new URLSearchParams(params).toString();
-    router.push(`/generate-pattern?${query}`);
+     });
+    router.push(`/generate-pattern?${params.toString()}`);
   }
 
   const sortQuestions = (questions: Question[]) => {

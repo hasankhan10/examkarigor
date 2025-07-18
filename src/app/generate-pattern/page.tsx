@@ -24,6 +24,9 @@ export default function GeneratePatternPage() {
     const params = Object.fromEntries(searchParams.entries());
     if (Object.keys(params).length > 0) {
         const newConfig: PaperConfig = { ...initialConfig };
+        newConfig.schoolName = params.schoolName || initialConfig.schoolName;
+        newConfig.examTerm = params.examTerm || initialConfig.examTerm;
+        newConfig.time = params.time || initialConfig.time;
         newConfig.class = params.class || initialConfig.class;
         newConfig.subject = params.subject || initialConfig.subject;
         newConfig.chapter = params.chapter || initialConfig.chapter;
@@ -58,25 +61,26 @@ export default function GeneratePatternPage() {
 
   const handleSelectChange = (name: 'class' | 'subject' | 'chapter') => (value: string) => {
     setConfig(prevConfig => {
-        const newConfig = { ...prevConfig };
+        const newConfig = { ...prevConfig, [name]: value };
 
         if (name === 'class') {
-            newConfig.class = value;
             const firstSubjectForClass = Object.keys(subjectDetails).find(sub => subjectDetails[sub].classes.includes(value)) || '';
             newConfig.subject = firstSubjectForClass;
             newConfig.chapter = 'all';
         } else if (name === 'subject') {
-            newConfig.subject = value;
             newConfig.chapter = 'all';
-        } else { // chapter
-            newConfig.chapter = value;
         }
 
         return newConfig;
     });
   };
   
-  const handleInputChange = (type: 'mcq' | 'saq' | 'long', field: 'count' | 'marks') => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setConfig(prev => ({ ...prev, [name]: value }));
+  };
+  
+  const handleQuestionConfigChange = (type: 'mcq' | 'saq' | 'long', field: 'count' | 'marks') => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value) || 0;
     setConfig(prev => ({
         ...prev,
@@ -89,6 +93,9 @@ export default function GeneratePatternPage() {
   
   const handleSubmit = () => {
     const params = {
+        schoolName: config.schoolName,
+        examTerm: config.examTerm,
+        time: config.time,
         class: config.class,
         subject: config.subject,
         chapter: config.chapter,
@@ -130,6 +137,21 @@ export default function GeneratePatternPage() {
                     </div>
                 </CardHeader>
                 <CardContent className="grid gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="schoolName">স্কুলের নাম</Label>
+                            <Input id="schoolName" name="schoolName" value={config.schoolName} onChange={handleInputChange} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="examTerm">পরীক্ষার পর্ব</Label>
+                            <Input id="examTerm" name="examTerm" value={config.examTerm} onChange={handleInputChange} />
+                        </div>
+                    </div>
+                     <div className="space-y-2">
+                            <Label htmlFor="time">সময়</Label>
+                            <Input id="time" name="time" value={config.time} onChange={handleInputChange} />
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="class">শ্রেণী</Label>
@@ -182,11 +204,11 @@ export default function GeneratePatternPage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="mcqCount">সংখ্যা</Label>
-                                    <Input type="number" id="mcqCount" value={config.mcq.count} onChange={handleInputChange('mcq', 'count')} />
+                                    <Input type="number" id="mcqCount" value={config.mcq.count} onChange={handleQuestionConfigChange('mcq', 'count')} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="mcqMarks">প্রতি প্রশ্নের নম্বর</Label>
-                                    <Input type="number" id="mcqMarks" value={config.mcq.marks} onChange={handleInputChange('mcq', 'marks')} />
+                                    <Input type="number" id="mcqMarks" value={config.mcq.marks} onChange={handleQuestionConfigChange('mcq', 'marks')} />
                                 </div>
                             </div>
                         </div>
@@ -204,11 +226,11 @@ export default function GeneratePatternPage() {
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="saqCount">সংখ্যা</Label>
-                                    <Input type="number" id="saqCount" value={config.saq.count} onChange={handleInputChange('saq', 'count')} />
+                                    <Input type="number" id="saqCount" value={config.saq.count} onChange={handleQuestionConfigChange('saq', 'count')} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="saqMarks">প্রতি প্রশ্নের নম্বর</Label>
-                                    <Input type="number" id="saqMarks" value={config.saq.marks} onChange={handleInputChange('saq', 'marks')} />
+                                    <Input type="number" id="saqMarks" value={config.saq.marks} onChange={handleQuestionConfigChange('saq', 'marks')} />
                                 </div>
                             </div>
                         </div>
@@ -226,11 +248,11 @@ export default function GeneratePatternPage() {
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="longCount">সংখ্যা</Label>
-                                    <Input type="number" id="longCount" value={config.long.count} onChange={handleInputChange('long', 'count')} />
+                                    <Input type="number" id="longCount" value={config.long.count} onChange={handleQuestionConfigChange('long', 'count')} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="longMarks">প্রতি প্রশ্নের নম্বর</Label>
-                                    <Input type="number" id="longMarks" value={config.long.marks} onChange={handleInputChange('long', 'marks')} />
+                                    <Input type="number" id="longMarks" value={config.long.marks} onChange={handleQuestionConfigChange('long', 'marks')} />
                                 </div>
                             </div>
                         </div>

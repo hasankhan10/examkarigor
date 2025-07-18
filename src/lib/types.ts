@@ -1,4 +1,7 @@
 export type PaperConfig = {
+  schoolName: string;
+  examTerm: string;
+  time: string;
   class: string;
   subject: string;
   chapter: string;

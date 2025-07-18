@@ -113,10 +113,14 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
         </CardHeader>
         <CardContent className="print-card-content">
           <div id="paper-content" className="p-6 border rounded-lg bg-background print-border print:!p-0 print:!border-0 print:!shadow-none">
-            <header className="text-center mb-6">
-              <h2 className="text-xl font-bold font-headline print-text-black">{config.subject} পরীক্ষা</h2>
-              <p className="print-text-black">শ্রেণী: {config.class}</p>
-              <p className="print-text-black">পূর্ণমান: {totalMarks}</p>
+            <header className="text-center mb-8 space-y-2">
+              <h1 className="text-2xl font-bold font-headline print-text-black">{config.schoolName}</h1>
+              <h2 className="text-xl font-semibold print-text-black">{config.examTerm}</h2>
+              <h3 className="text-lg print-text-black">{config.subject} পরীক্ষা</h3>
+              <div className="flex justify-between text-sm pt-2 print-text-black">
+                <span>পূর্ণমান: {totalMarks}</span>
+                <span>সময়: {config.time}</span>
+              </div>
             </header>
             <div className="print-paper-content">
                 <div className="space-y-6">
