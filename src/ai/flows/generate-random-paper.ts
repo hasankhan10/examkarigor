@@ -52,14 +52,18 @@ Class: {{{class}}}
 Subject: {{{subject}}}
 Chapter: {{{chapter}}}
 Total Marks: {{{totalMarks}}}
-Number of MCQs: {{{mcqCount}}}
-Number of SAQs: {{{saqCount}}}
-Number of Long Questions: {{{longQuestionCount}}}
+
+Your primary goal is to generate the exact number of questions for each type as specified below:
+- Number of MCQs: {{{mcqCount}}}
+- Number of SAQs: {{{saqCount}}}
+- Number of Long Questions: {{{longQuestionCount}}}
+
+You MUST generate exactly {{{mcqCount}}} MCQ questions, {{{saqCount}}} SAQ questions, and {{{longQuestionCount}}} Long questions.
 
 The generated questions must be pertinent to the syllabus of WBBSE/WBCHSE board.
 All questions and instructions should be in Bengali by default, using Unicode for Bengali script.
 For MCQs, provide 4 distinct options.
-Ensure the generated question types match the requested counts. The sum of marks for all questions should be as close as possible to the total marks specified.
+Distribute the marks among the questions so the sum is as close as possible to the total marks specified ({{{totalMarks}}}).
 Return the output as a JSON object containing a list of questions.
 `,
 });

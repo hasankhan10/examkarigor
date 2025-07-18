@@ -14,6 +14,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { FileSignature } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
+const questionTypeOrder = { 'MCQ': 1, 'SAQ': 2, 'Long': 3 };
+
 function DashboardComponent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -52,10 +54,21 @@ function DashboardComponent() {
     router.push(`/generate-pattern?${query}`);
   }
 
+  const sortQuestions = (questions: Question[]) => {
+    return [...questions].sort((a, b) => {
+      const typeA = questionTypeOrder[a.type] || 4;
+      const typeB = questionTypeOrder[b.type] || 4;
+      if (typeA !== typeB) {
+        return typeA - typeB;
+      }
+      return a.id - b.id; // Fallback to id for stable sort within the same type
+    });
+  };
+
   const handleAddQuestion = (question: Question) => {
     // Prevent adding duplicates
     if (!selectedQuestions.find(q => q.id === question.id)) {
-      setSelectedQuestions(prev => [...prev, question]);
+      setSelectedQuestions(prev => sortQuestions([...prev, question]));
     }
   };
 
@@ -75,7 +88,7 @@ function DashboardComponent() {
       subject: config.subject,
       chapter: config.chapter,
     }));
-    setSelectedQuestions(prev => [...prev, ...newQuestions]);
+    setSelectedQuestions(prev => sortQuestions([...prev, ...newQuestions]));
   };
 
   return (
