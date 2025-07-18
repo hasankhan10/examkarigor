@@ -13,8 +13,6 @@ import { ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileSignature } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-
 
 function DashboardComponent() {
   const searchParams = useSearchParams();
@@ -36,7 +34,6 @@ function DashboardComponent() {
       };
       setConfig(newConfig);
     } else {
-        // if no params, redirect to pattern generation
         router.push('/generate-pattern');
     }
   }, [searchParams, router]);
@@ -55,35 +52,10 @@ function DashboardComponent() {
     router.push(`/generate-pattern?${query}`);
   }
 
-  const onDragEnd = (result: DropResult) => {
-    const { source, destination } = result;
-
-    if (!destination) {
-      return;
-    }
-
-    // Dropping within the same list (reordering)
-    if (source.droppableId === destination.droppableId && destination.droppableId === 'paper-preview') {
-      const items = Array.from(selectedQuestions);
-      const [reorderedItem] = items.splice(source.index, 1);
-      items.splice(destination.index, 0, reorderedItem);
-
-      setSelectedQuestions(items);
-    }
-    // Moving from question bank to paper preview
-    else if (source.droppableId === 'question-bank' && destination.droppableId === 'paper-preview') {
-      const sourceList = filteredQuestions;
-      const destinationList = Array.from(selectedQuestions);
-      
-      const movedItem = { ...sourceList[source.index] };
-
-      // Prevent adding duplicates
-      if (destinationList.find(q => q.id === movedItem.id)) {
-        return;
-      }
-      
-      destinationList.splice(destination.index, 0, movedItem);
-      setSelectedQuestions(destinationList);
+  const handleAddQuestion = (question: Question) => {
+    // Prevent adding duplicates
+    if (!selectedQuestions.find(q => q.id === question.id)) {
+      setSelectedQuestions(prev => [...prev, question]);
     }
   };
 
@@ -121,42 +93,42 @@ function DashboardComponent() {
             </Button>
         </div>
         
-        <DragDropContext onDragEnd={onDragEnd}>
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-            <div className="lg:col-span-2 flex flex-col gap-8 no-print">
-                <Card className="border-primary/20 shadow-lg shadow-primary/5">
-                    <CardHeader className="pb-4">
-                        <div className="flex items-center gap-4">
-                        <FileSignature className="w-8 h-8 text-amber-400" />
-                        <div>
-                            <CardTitle className="font-headline text-2xl text-amber-400">আপনার কাঠামো</CardTitle>
-                            <CardDescription> বিষয়: {config.subject}, শ্রেণী: {config.class}, মোট নম্বর: {config.totalMarks}</CardDescription>
-                        </div>
-                        </div>
-                    </CardHeader>
-                    <CardContent className='pt-0'>
-                    <div className='flex flex-wrap gap-2'>
-                        <Badge variant="secondary">MCQ: {config.mcqCount}</Badge>
-                        <Badge variant="secondary">SAQ: {config.saqCount}</Badge>
-                        <Badge variant="secondary">বড় প্রশ্ন: {config.longQuestionCount}</Badge>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <div className="lg:col-span-2 flex flex-col gap-8 no-print">
+            <Card className="border-primary/20 shadow-lg shadow-primary/5">
+                <CardHeader className="pb-4">
+                    <div className="flex items-center gap-4">
+                    <FileSignature className="w-8 h-8 text-amber-400" />
+                    <div>
+                        <CardTitle className="font-headline text-2xl text-amber-400">আপনার কাঠামো</CardTitle>
+                        <CardDescription> বিষয়: {config.subject}, শ্রেণী: {config.class}, মোট নম্বর: {config.totalMarks}</CardDescription>
                     </div>
-                    </CardContent>
-                </Card>
-                <QuestionBank
-                questions={filteredQuestions}
-                />
-            </div>
-            <div className="lg:col-span-3">
-                <PaperPreview
-                config={config}
-                questions={selectedQuestions}
-                onRemoveQuestion={handleRemoveQuestion}
-                onReset={handleReset}
-                onAddAiQuestions={handleAddAiQuestions}
-                />
-            </div>
-            </div>
-        </DragDropContext>
+                    </div>
+                </CardHeader>
+                <CardContent className='pt-0'>
+                <div className='flex flex-wrap gap-2'>
+                    <Badge variant="secondary">MCQ: {config.mcqCount}</Badge>
+                    <Badge variant="secondary">SAQ: {config.saqCount}</Badge>
+                    <Badge variant="secondary">বড় প্রশ্ন: {config.longQuestionCount}</Badge>
+                </div>
+                </CardContent>
+            </Card>
+            <QuestionBank
+              questions={filteredQuestions}
+              onAddQuestion={handleAddQuestion}
+              selectedIds={selectedQuestions.map(q => q.id)}
+            />
+          </div>
+          <div className="lg:col-span-3">
+            <PaperPreview
+              config={config}
+              questions={selectedQuestions}
+              onRemoveQuestion={handleRemoveQuestion}
+              onReset={handleReset}
+              onAddAiQuestions={handleAddAiQuestions}
+            />
+          </div>
+        </div>
       </main>
     </div>
   );

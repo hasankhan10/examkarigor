@@ -5,10 +5,9 @@ import type { PaperConfig, Question } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Printer, Trash2, X, FileText, Bot, GripVertical } from 'lucide-react';
+import { Printer, Trash2, X, FileText } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import GeneratePaperDialog from './GeneratePaperDialog';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 type AiQuestion = Omit<Question, 'id' | 'class' | 'subject' | 'chapter'>;
 
@@ -51,59 +50,39 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
               <p className="print-text-black">শ্রেণী: {config.class}</p>
               <p className="print-text-black">পূর্ণমান: {config.totalMarks}</p>
             </header>
-            <Droppable droppableId="paper-preview" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false}>
-              {(provided) => (
-                <ScrollArea 
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className="h-[calc(100vh-32rem)] min-h-96"
-                >
-                    <div className="space-y-6 pr-4">
-                      {questions.length > 0 ? (
-                        questions.map((q, index) => (
-                           <Draggable key={q.id} draggableId={String(q.id)} index={index}>
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                className={`flex items-start gap-2 text-sm print-text-black p-2 rounded-lg transition-colors ${snapshot.isDragging ? 'bg-primary/30' : ''}`}
-                              >
-                                <div {...provided.dragHandleProps} className="no-print cursor-grab text-muted-foreground hover:text-foreground pt-1">
-                                  <GripVertical className="w-4 h-4" />
-                                </div>
-                                <span className="font-bold">{index + 1}.</span>
-                                <div className="flex-1">
-                                  <p>{q.text}</p>
-                                  {q.options && (
-                                    <ol className="list-alpha list-inside grid grid-cols-2 gap-2 mt-2">
-                                      {q.options.map((opt, i) => <li key={i}>{opt}</li>)}
-                                    </ol>
-                                  )}
-                                </div>
-                                <Badge variant="outline" className="print-text-black print-border">[{q.marks}]</Badge>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="w-6 h-6 text-red-500/70 hover:bg-red-500/10 hover:text-red-500 shrink-0 no-print"
-                                  onClick={() => onRemoveQuestion(q.id)}
-                                >
-                                  <X className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            )}
-                          </Draggable>
-                        ))
-                      ) : (
-                        <div className="text-center text-muted-foreground py-16 no-print">
-                          <p>প্রশ্ন ভান্ডার থেকে প্রশ্ন এখানে টেনে আনুন।</p>
-                          <p className="text-sm">আপনার নির্বাচিত প্রশ্নগুলি এখানে প্রদর্শিত হবে।</p>
+            <ScrollArea className="h-[calc(100vh-32rem)] min-h-96">
+                <div className="space-y-6 pr-4">
+                  {questions.length > 0 ? (
+                    questions.map((q, index) => (
+                      <div key={q.id} className="flex items-start gap-2 text-sm print-text-black p-2 rounded-lg">
+                        <span className="font-bold">{index + 1}.</span>
+                        <div className="flex-1">
+                          <p>{q.text}</p>
+                          {q.options && (
+                            <ol className="list-alpha list-inside grid grid-cols-2 gap-2 mt-2">
+                              {q.options.map((opt, i) => <li key={i}>{opt}</li>)}
+                            </ol>
+                          )}
                         </div>
-                      )}
-                      {provided.placeholder}
+                        <Badge variant="outline" className="print-text-black print-border">[{q.marks}]</Badge>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="w-6 h-6 text-red-500/70 hover:bg-red-500/10 hover:text-red-500 shrink-0 no-print"
+                          onClick={() => onRemoveQuestion(q.id)}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center text-muted-foreground py-16 no-print">
+                      <p>প্রশ্ন ভান্ডার থেকে প্রশ্ন যোগ করুন।</p>
+                      <p className="text-sm">আপনার নির্বাচিত প্রশ্নগুলি এখানে প্রদর্শিত হবে।</p>
                     </div>
-                </ScrollArea>
-              )}
-            </Droppable>
+                  )}
+                </div>
+            </ScrollArea>
           </div>
         </CardContent>
         <CardFooter className="flex justify-between items-center no-print">
