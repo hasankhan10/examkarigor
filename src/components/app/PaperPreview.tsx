@@ -41,7 +41,7 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
   let questionCounter = 0;
 
   return (
-    <Card className="sticky top-24 border-amber-500/20 shadow-lg shadow-amber-500/5 print-container">
+    <Card className="sticky top-24 border-amber-500/20 shadow-lg shadow-amber-500/5 print-container print:static">
       <div className="print-card">
         <CardHeader className="print-card-header no-print">
            <div className="flex items-center justify-between">
@@ -64,8 +64,8 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
               <p className="print-text-black">শ্রেণী: {config.class}</p>
               <p className="print-text-black">পূর্ণমান: {config.totalMarks}</p>
             </header>
-            <ScrollArea className="h-[calc(100vh-32rem)] min-h-96">
-                <div className="space-y-6 pr-4">
+            <ScrollArea className="h-[calc(100vh-32rem)] min-h-96 print:h-auto print:overflow-visible">
+                <div className="space-y-6 pr-4 print:pr-0">
                   {questions.length > 0 ? (
                     questionTypeOrder.map(type => {
                       const group = groupedQuestions[type];

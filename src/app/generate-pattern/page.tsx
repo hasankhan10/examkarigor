@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { subjectDetails } from '@/lib/mock-data';
+import { subjectDetails, classList } from '@/lib/mock-data';
 import type { PaperConfig } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -23,28 +23,36 @@ export default function GeneratePatternPage() {
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
     if (Object.keys(params).length > 0) {
-      setConfig({
-        class: params.class || initialConfig.class,
-        subject: params.subject || initialConfig.subject,
-        chapter: params.chapter || initialConfig.chapter,
-        totalMarks: Number(params.totalMarks) || initialConfig.totalMarks,
-        mcqCount: Number(params.mcqCount) || initialConfig.mcqCount,
-        saqCount: Number(params.saqCount) || initialConfig.saqCount,
-        longQuestionCount: Number(params.longQuestionCount) || initialConfig.longQuestionCount,
-      });
+      const newConfig = { ...initialConfig };
+      for (const key in params) {
+        if (key in newConfig) {
+            const paramValue = params[key];
+            const configKey = key as keyof PaperConfig;
+            if (typeof newConfig[configKey] === 'number') {
+                newConfig[configKey] = Number(paramValue) as any;
+            } else {
+                newConfig[configKey] = paramValue as any;
+            }
+        }
+      }
+      setConfig(newConfig);
     }
   }, [searchParams]);
 
   const handleSelectChange = (name: keyof PaperConfig) => (value: string) => {
     const newConfig: PaperConfig = { ...config, [name]: value };
-    if (name === 'subject') {
-      newConfig.chapter = 'all'; // Reset chapter on subject change
-      const newClass = subjectDetails[value]?.classes[0] || '';
-      newConfig.class = newClass;
+    
+    if (name === 'class') {
+      const firstSubjectForClass = Object.keys(subjectDetails).find(sub => subjectDetails[sub].classes.includes(value)) || '';
+      newConfig.subject = firstSubjectForClass;
+      newConfig.chapter = 'all';
+    } else if (name === 'subject') {
+      newConfig.chapter = 'all';
     }
+    
     setConfig(newConfig);
   };
-
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setConfig((prev) => ({ ...prev, [name]: parseInt(value) || 0 }));
@@ -55,8 +63,7 @@ export default function GeneratePatternPage() {
     router.push(`/dashboard?${query}`);
   };
 
-  const availableSubjects = Object.keys(subjectDetails);
-  const availableClasses = subjectDetails[config.subject]?.classes || [];
+  const availableSubjects = Object.keys(subjectDetails).filter(sub => subjectDetails[sub].classes.includes(config.class));
   const availableChapters = subjectDetails[config.subject]?.chapters[config.class] || [];
 
   return (
@@ -76,40 +83,40 @@ export default function GeneratePatternPage() {
                 <CardContent className="grid gap-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                        <Label htmlFor="subject">বিষয়</Label>
-                        <Select name="subject" value={config.subject} onValueChange={handleSelectChange('subject')}>
-                            <SelectTrigger id="subject"><SelectValue /></SelectTrigger>
-                            <SelectContent>
-                            {availableSubjects.map((sub) => (
-                                <SelectItem key={sub} value={sub}>{sub}</SelectItem>
-                            ))}
-                            </SelectContent>
-                        </Select>
+                            <Label htmlFor="class">শ্রেণী</Label>
+                            <Select name="class" value={config.class} onValueChange={handleSelectChange('class')}>
+                                <SelectTrigger id="class"><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                {classList.map((cls) => (
+                                    <SelectItem key={cls} value={cls}>{cls}</SelectItem>
+                                ))}
+                                </SelectContent>
+                            </Select>
                         </div>
                         <div className="space-y-2">
-                        <Label htmlFor="class">শ্রেণী</Label>
-                        <Select name="class" value={config.class} onValueChange={handleSelectChange('class')}>
-                            <SelectTrigger id="class"><SelectValue /></SelectTrigger>
-                            <SelectContent>
-                            {availableClasses.map((cls) => (
-                                <SelectItem key={cls} value={cls}>{cls}</SelectItem>
-                            ))}
-                            </SelectContent>
-                        </Select>
+                            <Label htmlFor="subject">বিষয়</Label>
+                            <Select name="subject" value={config.subject} onValueChange={handleSelectChange('subject')}>
+                                <SelectTrigger id="subject" disabled={!availableSubjects.length}><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                {availableSubjects.length > 0 ? availableSubjects.map((sub) => (
+                                    <SelectItem key={sub} value={sub}>{sub}</SelectItem>
+                                )) : <SelectItem value="" disabled>এই শ্রেণীর জন্য কোনো বিষয় নেই</SelectItem>}
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                    <Label htmlFor="chapter">অধ্যায়</Label>
-                    <Select name="chapter" value={config.chapter} onValueChange={handleSelectChange('chapter')}>
-                        <SelectTrigger id="chapter"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                        <SelectItem value="all">সমস্ত অধ্যায়</SelectItem>
-                        {availableChapters.map((chap) => (
-                            <SelectItem key={chap} value={chap}>{chap}</SelectItem>
-                        ))}
-                        </SelectContent>
-                    </Select>
+                        <Label htmlFor="chapter">অধ্যায়</Label>
+                        <Select name="chapter" value={config.chapter} onValueChange={handleSelectChange('chapter')}>
+                            <SelectTrigger id="chapter" disabled={!availableChapters.length}><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                            <SelectItem value="all">সমস্ত অধ্যায়</SelectItem>
+                            {availableChapters.map((chap) => (
+                                <SelectItem key={chap} value={chap}>{chap}</SelectItem>
+                            ))}
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
