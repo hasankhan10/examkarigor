@@ -27,7 +27,7 @@ export default function LandingPage() {
           <div className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider text-amber-400 uppercase rounded-full bg-primary/30 border border-amber-500/30">
             শিক্ষকদের জন্য একটি বিপ্লবী টুল
           </div>
-          <h2 className="text-5xl md:text-7xl font-headline font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/70 mb-6 leading-loose">
+          <h2 className="text-5xl md:text-7xl font-headline font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/70 mb-6 leading-loose md:leading-normal">
             প্রশ্নপত্র তৈরি করুন, <br /> নিমিষে ও নিখুঁতভাবে।
           </h2>
           <p className="max-w-3xl mx-auto text-lg text-muted-foreground mb-10">
