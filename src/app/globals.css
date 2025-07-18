@@ -89,6 +89,7 @@
 @media print {
   body {
     background-image: none !important;
+    background-color: white !important;
   }
   .no-print {
     display: none !important;
@@ -101,6 +102,7 @@
     border: none !important;
     box-shadow: none !important;
     width: 100% !important;
+    background-color: white !important;
   }
   .print-card {
     border: none !important;
