@@ -116,7 +116,10 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
             <header className="text-center mb-8 space-y-2">
               <h1 className="text-2xl font-bold font-headline print-text-black">{config.schoolName}</h1>
               <h2 className="text-xl font-semibold print-text-black">{config.examTerm}</h2>
-              <h3 className="text-lg print-text-black">{config.subject} পরীক্ষা</h3>
+              <div className="flex justify-center items-center gap-x-4">
+                <h3 className="text-lg print-text-black">{config.subject} পরীক্ষা</h3>
+                <h3 className="text-lg print-text-black">শ্রেণী: {config.class}</h3>
+              </div>
               <div className="flex justify-between text-sm pt-2 print-text-black">
                 <span>পূর্ণমান: {totalMarks}</span>
                 <span>সময়: {config.time}</span>
