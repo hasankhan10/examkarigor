@@ -26,9 +26,6 @@ interface GeneratePaperDialogProps {
   onAccept: (questions: AiQuestion[]) => void;
 }
 
-type Difficulty = 'Easy' | 'Medium' | 'Hard';
-const difficultyLevels: Difficulty[] = ['Easy', 'Medium', 'Hard'];
-
 const LoadingSpinner = () => (
   <div className="flex flex-col items-center justify-center gap-4 text-center">
     <Loader2 className="h-12 w-12 animate-spin text-amber-400" />
@@ -67,7 +64,7 @@ export default function GeneratePaperDialog({ config, onAccept }: GeneratePaperD
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [generatedQuestions, setGeneratedQuestions] = useState<AiQuestion[] | null>(null);
-  const [difficulty, setDifficulty] = useState<Difficulty>('Medium');
+  const [difficulty, setDifficulty] = useState(50); // Default to medium difficulty
   const { toast } = useToast();
 
   const handleGenerate = async () => {
@@ -110,13 +107,10 @@ export default function GeneratePaperDialog({ config, onAccept }: GeneratePaperD
         setIsLoading(false);
     }
   }
-  
+
   const handleSliderChange = (value: number[]) => {
-      setDifficulty(difficultyLevels[value[0]]);
+    setDifficulty(value[0]);
   }
-
-  const sliderValue = [difficultyLevels.indexOf(difficulty)];
-
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -148,19 +142,19 @@ export default function GeneratePaperDialog({ config, onAccept }: GeneratePaperD
             ) : (
                 <div className="text-center text-muted-foreground space-y-4 w-full px-8">
                     <div>
-                        <Label className='text-base font-semibold'>প্রশ্নের স্তর নির্বাচন করুন</Label>
+                        <Label className='text-base font-semibold'>প্রশ্নের স্তর নির্বাচন করুন: <span className='font-bold text-amber-400'>{difficulty}</span></Label>
                          <div className='py-4'>
                             <Slider
-                                defaultValue={sliderValue}
+                                defaultValue={[difficulty]}
                                 onValueChange={handleSliderChange}
-                                max={2}
+                                max={100}
                                 step={1}
                             />
                          </div>
                          <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>সহজ</span>
-                            <span>মধ্যম</span>
-                            <span>কঠিন</span>
+                            <span>খুব সহজ</span>
+                            <span>মাঝারি</span>
+                            <span>খুব কঠিন</span>
                         </div>
                     </div>
                      <p className="text-sm pt-4">'জেনারেট করুন' বোতামে ক্লিক করুন।</p>
