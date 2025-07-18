@@ -1,10 +1,13 @@
 
 'use client';
 
+import { useState } from 'react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import type { PaperConfig, Question, AiQuestion } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Printer, Trash2, X, FileText } from 'lucide-react';
+import { Printer, Trash2, X, FileText, Loader2 } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import GeneratePaperDialog from './GeneratePaperDialog';
 
@@ -19,10 +22,55 @@ interface PaperPreviewProps {
 }
 
 export default function PaperPreview({ config, questions, totalMarks, onRemoveQuestion, onReset, onAddAiQuestions }: PaperPreviewProps) {
+  const [isDownloading, setIsDownloading] = useState(false);
   const selectedTotalMarks = questions.reduce((sum, q) => sum + q.marks, 0);
 
-  const handlePrint = () => {
-    window.print();
+  const handleDownloadPdf = async () => {
+    const paperContentElement = document.getElementById('paper-content');
+    if (!paperContentElement) return;
+
+    setIsDownloading(true);
+
+    try {
+        const canvas = await html2canvas(paperContentElement, {
+            scale: 2, // Increase scale for better resolution
+            useCORS: true,
+            backgroundColor: '#0a0a0a', // Match dark theme background
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+            orientation: 'p',
+            unit: 'mm',
+            format: 'a4',
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+        const ratio = imgWidth / imgHeight;
+        const imgHeightOnPdf = pdfWidth / ratio;
+        let heightLeft = imgHeight;
+        
+        let position = 0;
+
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightOnPdf);
+        heightLeft -= pdf.internal.pageSize.getHeight() * (imgHeight/imgHeightOnPdf);
+
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightOnPdf);
+            heightLeft -= pdf.internal.pageSize.getHeight() * (imgHeight/imgHeightOnPdf);
+        }
+
+        pdf.save('question-paper.pdf');
+    } catch (error) {
+        console.error("Could not generate PDF", error);
+    } finally {
+        setIsDownloading(false);
+    }
   };
 
   const groupedQuestions = questions.reduce((acc, q) => {
@@ -58,7 +106,7 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
            </div>
         </CardHeader>
         <CardContent className="print-card-content">
-          <div className="p-4 border rounded-lg bg-background print-border print:!p-0 print:!border-0">
+          <div id="paper-content" className="p-6 border rounded-lg bg-background print-border print:!p-0 print:!border-0 print:!shadow-none">
             <header className="text-center mb-6">
               <h2 className="text-xl font-bold font-headline print-text-black">{config.subject} পরীক্ষা</h2>
               <p className="print-text-black">শ্রেণী: {config.class}</p>
@@ -129,9 +177,9 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
                     <Trash2 className="mr-2 h-4 w-4" />
                     রিসেট
                 </Button>
-                <Button onClick={handlePrint} className="bg-amber-500 text-accent-foreground hover:bg-amber-600" disabled={questions.length === 0}>
-                    <Printer className="mr-2 h-4 w-4" />
-                    প্রিন্ট / PDF
+                <Button onClick={handleDownloadPdf} className="bg-amber-500 text-accent-foreground hover:bg-amber-600" disabled={questions.length === 0 || isDownloading}>
+                    {isDownloading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Printer className="mr-2 h-4 w-4" />}
+                    {isDownloading ? 'ডাউনলোড হচ্ছে...' : 'প্রিন্ট / PDF'}
                 </Button>
             </div>
         </CardFooter>
