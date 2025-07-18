@@ -50,7 +50,6 @@ export default function QuestionBank({ questions }: QuestionBankProps) {
                   filteredQuestions.map((q, index) => (
                     <Draggable key={q.id} draggableId={String(q.id)} index={index}>
                       {(provided, snapshot) => (
-                        <>
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
@@ -74,18 +73,6 @@ export default function QuestionBank({ questions }: QuestionBankProps) {
                                 <GripVertical className="w-5 h-5" />
                             </div>
                           </div>
-                          {snapshot.isDragging && (
-                            <div className="p-4 rounded-lg border border-dashed border-primary/20 bg-background/50 !mt-4">
-                               <div className="flex-1 space-y-2">
-                                <p className="font-medium">{q.text}</p>
-                                 <div className="flex items-center gap-2 text-xs">
-                                    <Badge variant="secondary">{q.type}</Badge>
-                                    <Badge variant="outline" className="border-amber-400/50 text-amber-400">{q.marks} নম্বর</Badge>
-                                </div>
-                            </div>
-                            </div>
-                          )}
-                        </>
                       )}
                     </Draggable>
                   ))
