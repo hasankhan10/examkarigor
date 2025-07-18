@@ -33,6 +33,19 @@ export default function GeneratePatternPage() {
         newConfig.saq.marks = Number(params['saq.marks']) || initialConfig.saq.marks;
         newConfig.long.count = Number(params['long.count']) || initialConfig.long.count;
         newConfig.long.marks = Number(params['long.marks']) || initialConfig.long.marks;
+        
+        // Ensure subject is valid for the class
+        const availableSubjectsForClass = Object.keys(subjectDetails).filter(sub => subjectDetails[sub].classes.includes(newConfig.class));
+        if (!availableSubjectsForClass.includes(newConfig.subject)) {
+            newConfig.subject = availableSubjectsForClass[0] || '';
+        }
+
+        // Ensure chapter is valid
+        const availableChaptersForSubject = subjectDetails[newConfig.subject]?.chapters[newConfig.class] || [];
+        if (!availableChaptersForSubject.includes(newConfig.chapter) && newConfig.chapter !== 'all') {
+            newConfig.chapter = 'all';
+        }
+        
         setConfig(newConfig);
     }
   }, [searchParams]);
@@ -43,18 +56,24 @@ export default function GeneratePatternPage() {
            (config.long.count * config.long.marks);
   }, [config]);
 
-  const handleSelectChange = (name: keyof PaperConfig) => (value: string) => {
-    const newConfig: PaperConfig = { ...config, [name]: value };
-    
-    if (name === 'class') {
-      const firstSubjectForClass = Object.keys(subjectDetails).find(sub => subjectDetails[sub].classes.includes(value)) || '';
-      newConfig.subject = firstSubjectForClass;
-      newConfig.chapter = 'all';
-    } else if (name === 'subject') {
-      newConfig.chapter = 'all';
-    }
-    
-    setConfig(newConfig);
+  const handleSelectChange = (name: 'class' | 'subject' | 'chapter') => (value: string) => {
+    setConfig(prevConfig => {
+        const newConfig = { ...prevConfig };
+
+        if (name === 'class') {
+            newConfig.class = value;
+            const firstSubjectForClass = Object.keys(subjectDetails).find(sub => subjectDetails[sub].classes.includes(value)) || '';
+            newConfig.subject = firstSubjectForClass;
+            newConfig.chapter = 'all';
+        } else if (name === 'subject') {
+            newConfig.subject = value;
+            newConfig.chapter = 'all';
+        } else { // chapter
+            newConfig.chapter = value;
+        }
+
+        return newConfig;
+    });
   };
   
   const handleInputChange = (type: 'mcq' | 'saq' | 'long', field: 'count' | 'marks') => (e: React.ChangeEvent<HTMLInputElement>) => {
