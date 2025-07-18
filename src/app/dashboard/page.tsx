@@ -12,6 +12,7 @@ import { ArrowLeft } from 'lucide-react';
 import PaperConfiguration from '@/components/app/PaperConfiguration';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileSignature } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 function DashboardComponent() {
   const searchParams = useSearchParams();
@@ -86,7 +87,7 @@ function DashboardComponent() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           <div className="lg:col-span-2 flex flex-col gap-8">
              <Card className="border-primary/20 shadow-lg shadow-primary/5">
-                <CardHeader>
+                <CardHeader className="pb-4">
                     <div className="flex items-center gap-4">
                     <FileSignature className="w-8 h-8 text-amber-400" />
                     <div>
@@ -95,6 +96,13 @@ function DashboardComponent() {
                     </div>
                     </div>
                 </CardHeader>
+                <CardContent className='pt-0'>
+                  <div className='flex flex-wrap gap-2'>
+                    <Badge variant="secondary">MCQ: {config.mcqCount}</Badge>
+                    <Badge variant="secondary">SAQ: {config.saqCount}</Badge>
+                    <Badge variant="secondary">বড় প্রশ্ন: {config.longQuestionCount}</Badge>
+                  </div>
+                </CardContent>
              </Card>
             <QuestionBank
               questions={filteredQuestions}
