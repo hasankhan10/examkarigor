@@ -13,7 +13,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileSignature } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, DropResult, resetServerContext } from 'react-beautiful-dnd';
 
 
 function DashboardComponent() {
@@ -21,6 +21,11 @@ function DashboardComponent() {
   const router = useRouter();
   const [config, setConfig] = useState<PaperConfig>(initialConfig);
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
+
+  // Fix for react-beautiful-dnd in React 18 Strict Mode
+  useEffect(() => {
+    resetServerContext();
+  }, []);
 
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
@@ -46,7 +51,7 @@ function DashboardComponent() {
       (q) =>
         q.subject === config.subject &&
         q.class === config.class &&
-        (config.chapter === 'all' || q.chapter === config.chapter)
+        (config.chapter === 'all' || q.chapter === config.gitchapter)
     );
   }, [config.subject, config.class, config.chapter]);
   
@@ -75,7 +80,7 @@ function DashboardComponent() {
       const sourceList = filteredQuestions;
       const destinationList = Array.from(selectedQuestions);
       
-      const [movedItem] = sourceList.slice(source.index, source.index + 1);
+      const movedItem = { ...sourceList[source.index] };
 
       // Prevent adding duplicates
       if (destinationList.find(q => q.id === movedItem.id)) {
