@@ -18,7 +18,8 @@ import { Card, CardContent } from '../ui/card';
 import { ScrollArea } from '../ui/scroll-area';
 import { Badge } from '../ui/badge';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Slider } from '@/components/ui/slider';
+
 
 interface GeneratePaperDialogProps {
   config: PaperConfig;
@@ -26,6 +27,7 @@ interface GeneratePaperDialogProps {
 }
 
 type Difficulty = 'Easy' | 'Medium' | 'Hard';
+const difficultyLevels: Difficulty[] = ['Easy', 'Medium', 'Hard'];
 
 const LoadingSpinner = () => (
   <div className="flex flex-col items-center justify-center gap-4 text-center">
@@ -108,6 +110,13 @@ export default function GeneratePaperDialog({ config, onAccept }: GeneratePaperD
         setIsLoading(false);
     }
   }
+  
+  const handleSliderChange = (value: number[]) => {
+      setDifficulty(difficultyLevels[value[0]]);
+  }
+
+  const sliderValue = [difficultyLevels.indexOf(difficulty)];
+
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -137,29 +146,24 @@ export default function GeneratePaperDialog({ config, onAccept }: GeneratePaperD
                     </CardContent>
                 </Card>
             ) : (
-                <div className="text-center text-muted-foreground space-y-4">
+                <div className="text-center text-muted-foreground space-y-4 w-full px-8">
                     <div>
                         <Label className='text-base font-semibold'>প্রশ্নের স্তর নির্বাচন করুন</Label>
-                        <RadioGroup
-                            value={difficulty}
-                            onValueChange={(value) => setDifficulty(value as Difficulty)}
-                            className="flex justify-center gap-4 mt-2"
-                        >
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="Easy" id="easy" />
-                                <Label htmlFor="easy">সহজ</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="Medium" id="medium" />
-                                <Label htmlFor="medium">মধ্যম</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="Hard" id="hard" />
-                                <Label htmlFor="hard">কঠিন</Label>
-                            </div>
-                        </RadioGroup>
+                         <div className='py-4'>
+                            <Slider
+                                defaultValue={sliderValue}
+                                onValueChange={handleSliderChange}
+                                max={2}
+                                step={1}
+                            />
+                         </div>
+                         <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>সহজ</span>
+                            <span>মধ্যম</span>
+                            <span>কঠিন</span>
+                        </div>
                     </div>
-                     <p className="text-sm">'জেনারেট করুন' বোতামে ক্লিক করুন।</p>
+                     <p className="text-sm pt-4">'জেনারেট করুন' বোতামে ক্লিক করুন।</p>
                 </div>
             )}
         </div>
