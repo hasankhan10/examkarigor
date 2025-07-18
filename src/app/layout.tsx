@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'পরীক্ষা কারিগর | Bengali Exam Crafter',
+  title: 'EXAM কারিগর',
   description: 'The ultimate tool for teachers in West Bengal to create elegant exam papers.',
 };
 

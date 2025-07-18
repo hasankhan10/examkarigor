@@ -17,7 +17,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 no-print">
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
         <Link href="/" className="text-2xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">
-          পরীক্ষা কারিগর
+          EXAM কারিগর
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
