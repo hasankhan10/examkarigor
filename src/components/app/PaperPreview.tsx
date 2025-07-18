@@ -37,8 +37,11 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
             useCORS: true,
             backgroundColor: '#ffffff', // Use a white background for the PDF
             onclone: (document) => {
-              // On the cloned document, add a class to the body to trigger print styles
               document.body.classList.add('print-pdf');
+              // Manually hide elements with .no-print class for html2canvas
+              document.querySelectorAll('.no-print').forEach(el => {
+                (el as HTMLElement).style.display = 'none';
+              });
             }
         });
 
