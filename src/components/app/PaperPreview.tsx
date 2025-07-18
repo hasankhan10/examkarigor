@@ -26,6 +26,21 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
     window.print();
   };
 
+  const groupedQuestions = questions.reduce((acc, q) => {
+    (acc[q.type] = acc[q.type] || []).push(q);
+    return acc;
+  }, {} as Record<Question['type'], Question[]>);
+
+  const typeNames: Record<Question['type'], string> = {
+    'MCQ': 'সঠিক উত্তরটি নির্বাচন করো (MCQ)',
+    'SAQ': 'সংক্ষিপ্ত উত্তরভিত্তিক প্রশ্ন (SAQ)',
+    'Long': 'দীর্ঘ উত্তরভিত্তিক প্রশ্ন',
+  };
+  
+  const questionTypeOrder: Question['type'][] = ['MCQ', 'SAQ', 'Long'];
+
+  let questionCounter = 0;
+
   return (
     <Card className="sticky top-24 border-amber-500/20 shadow-lg shadow-amber-500/5 print-container">
       <div className="print-card">
@@ -53,28 +68,44 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
             <ScrollArea className="h-[calc(100vh-32rem)] min-h-96">
                 <div className="space-y-6 pr-4">
                   {questions.length > 0 ? (
-                    questions.map((q, index) => (
-                      <div key={q.id} className="flex items-start gap-2 text-sm print-text-black p-2 rounded-lg">
-                        <span className="font-bold">{index + 1}.</span>
-                        <div className="flex-1">
-                          <p>{q.text}</p>
-                          {q.options && (
-                            <ol className="list-alpha list-inside grid grid-cols-2 gap-2 mt-2">
-                              {q.options.map((opt, i) => <li key={i}>{opt}</li>)}
-                            </ol>
-                          )}
+                    questionTypeOrder.map(type => {
+                      const group = groupedQuestions[type];
+                      if (!group || group.length === 0) return null;
+                      
+                      const groupMarks = group.reduce((sum, q) => sum + q.marks, 0);
+                      const groupName = typeNames[type];
+
+                      return (
+                        <div key={type}>
+                          <h3 className="text-lg font-headline font-bold mb-3 p-2 bg-primary/10 rounded-md print-text-black">{groupName} <span className="text-sm font-normal text-muted-foreground">({group.length}টি প্রশ্ন, মোট {groupMarks} নম্বর)</span></h3>
+                          {group.map((q) => {
+                             questionCounter++;
+                             return (
+                              <div key={q.id} className="flex items-start gap-2 text-sm print-text-black p-2 rounded-lg mb-2">
+                                <span className="font-bold">{questionCounter}.</span>
+                                <div className="flex-1">
+                                  <p>{q.text}</p>
+                                  {q.options && (
+                                    <ol className="list-alpha list-inside grid grid-cols-2 gap-2 mt-2">
+                                      {q.options.map((opt, i) => <li key={i}>{opt}</li>)}
+                                    </ol>
+                                  )}
+                                </div>
+                                <Badge variant="outline" className="print-text-black print-border">[{q.marks}]</Badge>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="w-6 h-6 text-red-500/70 hover:bg-red-500/10 hover:text-red-500 shrink-0 no-print"
+                                  onClick={() => onRemoveQuestion(q.id)}
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            )
+                          })}
                         </div>
-                        <Badge variant="outline" className="print-text-black print-border">[{q.marks}]</Badge>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="w-6 h-6 text-red-500/70 hover:bg-red-500/10 hover:text-red-500 shrink-0 no-print"
-                          onClick={() => onRemoveQuestion(q.id)}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))
+                      )
+                    })
                   ) : (
                     <div className="text-center text-muted-foreground py-16 no-print">
                       <p>প্রশ্ন ভান্ডার থেকে প্রশ্ন যোগ করুন।</p>
