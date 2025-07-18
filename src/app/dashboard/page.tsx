@@ -13,7 +13,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileSignature } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { DragDropContext, Droppable, Draggable, DropResult, resetServerContext } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
 
 function DashboardComponent() {
@@ -21,11 +21,6 @@ function DashboardComponent() {
   const router = useRouter();
   const [config, setConfig] = useState<PaperConfig>(initialConfig);
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
-
-  // Fix for react-beautiful-dnd in React 18 Strict Mode
-  useEffect(() => {
-    resetServerContext();
-  }, []);
 
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
