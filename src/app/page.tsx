@@ -13,9 +13,9 @@ export default function LandingPage() {
       
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
-          <h1 className="text-2xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">
+          <Link href="/" className="text-2xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">
             পরীক্ষা কারিগর
-          </h1>
+          </Link>
           <Button asChild variant="ghost">
             <Link href="/dashboard">লগইন করুন</Link>
           </Button>
@@ -34,7 +34,7 @@ export default function LandingPage() {
             ‘পরীক্ষা কারিগর’ আপনার শিক্ষাদানের পদ্ধতিকে আরও সহজ ও কার্যকর করে তুলবে। আধুনিক প্রযুক্তির সাহায্যে এখন থেকে প্রশ্নপত্র তৈরি হবে আরও দ্রুত এবং সুন্দরভাবে।
           </p>
           <Button asChild size="lg" className="bg-amber-500 text-accent-foreground hover:bg-amber-600 text-lg py-7 px-10 shadow-lg shadow-amber-500/20 transition-all duration-300 hover:scale-105">
-            <Link href="/dashboard">
+            <Link href="/generate-pattern">
               প্রশ্নপত্র তৈরি করুন
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>

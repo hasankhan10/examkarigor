@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import type { PaperConfig, Question } from '@/lib/types';
 import { initialConfig, questionBank } from '@/lib/mock-data';
 import Header from '@/components/app/Header';
@@ -8,9 +9,40 @@ import PaperConfiguration from '@/components/app/PaperConfiguration';
 import QuestionBank from '@/components/app/QuestionBank';
 import PaperPreview from '@/components/app/PaperPreview';
 
-export default function DashboardPage() {
-  const [config, setConfig] = useState<PaperConfig>(initialConfig);
+function DashboardComponent() {
+  const searchParams = useSearchParams();
+  const [config, setConfig] = useState<PaperConfig>(() => {
+    const params = Object.fromEntries(searchParams.entries());
+    if (Object.keys(params).length > 0) {
+      return {
+        class: params.class || initialConfig.class,
+        subject: params.subject || initialConfig.subject,
+        chapter: params.chapter || initialConfig.chapter,
+        totalMarks: Number(params.totalMarks) || initialConfig.totalMarks,
+        mcqCount: Number(params.mcqCount) || initialConfig.mcqCount,
+        saqCount: Number(params.saqCount) || initialConfig.saqCount,
+        longQuestionCount: Number(params.longQuestionCount) || initialConfig.longQuestionCount,
+      };
+    }
+    return initialConfig;
+  });
+
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
+
+  useEffect(() => {
+    const params = Object.fromEntries(searchParams.entries());
+    if (Object.keys(params).length > 0) {
+      setConfig({
+        class: params.class || initialConfig.class,
+        subject: params.subject || initialConfig.subject,
+        chapter: params.chapter || initialConfig.chapter,
+        totalMarks: Number(params.totalMarks) || initialConfig.totalMarks,
+        mcqCount: Number(params.mcqCount) || initialConfig.mcqCount,
+        saqCount: Number(params.saqCount) || initialConfig.saqCount,
+        longQuestionCount: Number(params.longQuestionCount) || initialConfig.longQuestionCount,
+      });
+    }
+  }, [searchParams]);
 
   const handleAddQuestion = (question: Question) => {
     setSelectedQuestions((prev) => {
@@ -63,4 +95,12 @@ export default function DashboardPage() {
       </main>
     </div>
   );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardComponent />
+    </Suspense>
+  )
 }
