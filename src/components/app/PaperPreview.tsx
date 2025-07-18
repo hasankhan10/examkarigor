@@ -5,8 +5,9 @@ import type { PaperConfig, Question } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Printer, Trash2, X, FileText } from 'lucide-react';
+import { Printer, Trash2, X, FileText, Bot } from 'lucide-react';
 import { Badge } from '../ui/badge';
+import GeneratePaperDialog from './GeneratePaperDialog';
 
 interface PaperPreviewProps {
   config: PaperConfig;
@@ -27,11 +28,16 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
     <Card className="sticky top-24 border-amber-500/20 shadow-lg shadow-amber-500/5 print-container">
       <div className="print-card">
         <CardHeader className="print-card-header">
-           <div className="flex items-center gap-4">
-              <FileText className="w-8 h-8 text-amber-400" />
-              <div>
-                <CardTitle className="font-headline text-2xl text-amber-400 print-text-black">প্রশ্নপত্রের পূর্বরূপ</CardTitle>
-                <CardDescription>আপনার তৈরি করা প্রশ্নপত্রটি এখানে দেখুন</CardDescription>
+           <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <FileText className="w-8 h-8 text-amber-400" />
+                <div>
+                  <CardTitle className="font-headline text-2xl text-amber-400 print-text-black">প্রশ্নপত্রের পূর্বরূপ</CardTitle>
+                  <CardDescription>আপনার তৈরি করা প্রশ্নপত্রটি এখানে দেখুন</CardDescription>
+                </div>
+              </div>
+              <div className="no-print">
+                 <GeneratePaperDialog config={config} />
               </div>
            </div>
         </CardHeader>
@@ -42,7 +48,7 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
               <p className="print-text-black">শ্রেণী: {config.class}</p>
               <p className="print-text-black">পূর্ণমান: {config.totalMarks}</p>
             </header>
-            <ScrollArea className="h-[calc(100vh-25rem)] min-h-96">
+            <ScrollArea className="h-[calc(100vh-32rem)] min-h-96">
                 <div className="space-y-6 pr-4">
                   {questions.length > 0 ? (
                     questions.map((q, index) => (

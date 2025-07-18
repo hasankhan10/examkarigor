@@ -9,8 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { FileSignature, Bot, Info } from 'lucide-react';
-import GeneratePaperDialog from './GeneratePaperDialog';
-
 
 interface PaperConfigurationProps {
   config: PaperConfig;
@@ -129,7 +127,6 @@ export default function PaperConfiguration({ config, setConfig }: PaperConfigura
             <Input type="number" id="longQuestionCount" name="longQuestionCount" value={config.longQuestionCount} onChange={handleInputChange} />
           </div>
         </div>
-        <GeneratePaperDialog config={config} />
       </CardContent>
     </Card>
   );

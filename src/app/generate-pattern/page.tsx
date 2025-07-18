@@ -1,9 +1,8 @@
 
 'use client';
 
-import type { Dispatch, SetStateAction } from 'react';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { subjectDetails } from '@/lib/mock-data';
 import type { PaperConfig } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -19,6 +18,22 @@ import { initialConfig } from '@/lib/mock-data';
 export default function GeneratePatternPage() {
   const [config, setConfig] = useState<PaperConfig>(initialConfig);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const params = Object.fromEntries(searchParams.entries());
+    if (Object.keys(params).length > 0) {
+      setConfig({
+        class: params.class || initialConfig.class,
+        subject: params.subject || initialConfig.subject,
+        chapter: params.chapter || initialConfig.chapter,
+        totalMarks: Number(params.totalMarks) || initialConfig.totalMarks,
+        mcqCount: Number(params.mcqCount) || initialConfig.mcqCount,
+        saqCount: Number(params.saqCount) || initialConfig.saqCount,
+        longQuestionCount: Number(params.longQuestionCount) || initialConfig.longQuestionCount,
+      });
+    }
+  }, [searchParams]);
 
   const handleSelectChange = (name: keyof PaperConfig) => (value: string) => {
     const newConfig: PaperConfig = { ...config, [name]: value };
