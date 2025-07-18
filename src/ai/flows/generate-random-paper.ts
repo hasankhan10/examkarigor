@@ -21,6 +21,7 @@ const GenerateRandomPaperInputSchema = z.object({
   class: z.string().describe('The class for which to generate the exam paper (e.g., 5-12).'),
   subject: z.string().describe('The subject for which to generate the exam paper (e.g., Bengali, Math, Science).'),
   chapter: z.string().describe('The chapter for which to generate the exam paper (e.g., specific topics within the subject).'),
+  difficulty: z.enum(['Easy', 'Medium', 'Hard']).describe('The difficulty level of the questions.'),
   mcq: QuestionTypeDetailSchema.describe('Details for Multiple Choice Questions.'),
   saq: QuestionTypeDetailSchema.describe('Details for Short Answer Questions.'),
   long: QuestionTypeDetailSchema.describe('Details for Long Questions.'),
@@ -60,6 +61,7 @@ You will generate a random exam paper based on the following criteria:
 Class: {{{class}}}
 Subject: {{{subject}}}
 Chapter: {{{chapter}}}
+Difficulty: {{{difficulty}}}
 
 Your primary goal is to generate the exact number of questions for each type as specified below, with the specified marks for each question.
 - Multiple Choice Questions (MCQ):
@@ -75,6 +77,7 @@ Your primary goal is to generate the exact number of questions for each type as 
 This structure is a strict, non-negotiable requirement. You MUST generate exactly {{{mcq.count}}} MCQ questions, each worth {{{mcq.marks}}} marks. You MUST generate exactly {{{saq.count}}} SAQ questions, each worth {{{saq.marks}}} marks. You MUST generate exactly {{{long.count}}} Long questions, each worth {{{long.marks}}} marks.
 
 The total marks for the paper will be ({{{mcq.count}}} * {{{mcq.marks}}}) + ({{{saq.count}}} * {{{saq.marks}}}) + ({{{long.count}}} * {{{long.marks}}}). Your generated question set MUST match this structure perfectly.
+The questions must be of {{{difficulty}}} difficulty level.
 
 For some questions, you can provide an alternative "OR" question by adding a second item to the 'alternatives' array for that question.
 

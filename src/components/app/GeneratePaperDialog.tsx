@@ -17,11 +17,15 @@ import { Loader2, Bot, Check, X } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { ScrollArea } from '../ui/scroll-area';
 import { Badge } from '../ui/badge';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface GeneratePaperDialogProps {
   config: PaperConfig;
   onAccept: (questions: AiQuestion[]) => void;
 }
+
+type Difficulty = 'Easy' | 'Medium' | 'Hard';
 
 const LoadingSpinner = () => (
   <div className="flex flex-col items-center justify-center gap-4 text-center">
@@ -61,13 +65,14 @@ export default function GeneratePaperDialog({ config, onAccept }: GeneratePaperD
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [generatedQuestions, setGeneratedQuestions] = useState<AiQuestion[] | null>(null);
+  const [difficulty, setDifficulty] = useState<Difficulty>('Medium');
   const { toast } = useToast();
 
   const handleGenerate = async () => {
     setIsLoading(true);
     setGeneratedQuestions(null);
     try {
-      const result = await generateRandomPaper(config);
+      const result = await generateRandomPaper({ ...config, difficulty });
       setGeneratedQuestions(result.questions);
       toast({
         title: "আপনার মাস্টারপিস প্রস্তুত!",
@@ -132,9 +137,29 @@ export default function GeneratePaperDialog({ config, onAccept }: GeneratePaperD
                     </CardContent>
                 </Card>
             ) : (
-                <div className="text-center text-muted-foreground">
-                    <p>আপনি কি একটি নতুন প্রশ্নপত্র তৈরি করতে প্রস্তুত?</p>
-                    <p className="text-sm">'জেনারেট করুন' বোতামে ক্লিক করুন।</p>
+                <div className="text-center text-muted-foreground space-y-4">
+                    <div>
+                        <Label className='text-base font-semibold'>প্রশ্নের স্তর নির্বাচন করুন</Label>
+                        <RadioGroup
+                            value={difficulty}
+                            onValueChange={(value) => setDifficulty(value as Difficulty)}
+                            className="flex justify-center gap-4 mt-2"
+                        >
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="Easy" id="easy" />
+                                <Label htmlFor="easy">সহজ</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="Medium" id="medium" />
+                                <Label htmlFor="medium">মধ্যম</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="Hard" id="hard" />
+                                <Label htmlFor="hard">কঠিন</Label>
+                            </div>
+                        </RadioGroup>
+                    </div>
+                     <p className="text-sm">'জেনারেট করুন' বোতামে ক্লিক করুন।</p>
                 </div>
             )}
         </div>
