@@ -91,6 +91,14 @@
   background-color: white !important;
 }
 
+.print-pdf .print-badge-transparent {
+  border: none !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  font-weight: normal;
+  color: black !important;
+}
+
 @media print {
   body {
     background-image: none !important;

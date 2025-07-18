@@ -146,7 +146,7 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
                                     </div>
                                   ))}
                                 </div>
-                                <Badge variant="outline" className="print-text-black print-border">[{q.marks}]</Badge>
+                                <Badge variant="outline" className="print-badge-transparent">[{q.marks}]</Badge>
                                 <Button
                                   variant="ghost"
                                   size="icon"
