@@ -38,7 +38,7 @@ export default function QuestionBank({ questions }: QuestionBankProps) {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <Droppable droppableId="question-bank" isDropDisabled={true} isCombineEnabled={false}>
+        <Droppable droppableId="question-bank" isDropDisabled={true} isCombineEnabled={false} ignoreContainerClipping={false}>
           {(provided, snapshot) => (
             <ScrollArea 
                 ref={provided.innerRef}
