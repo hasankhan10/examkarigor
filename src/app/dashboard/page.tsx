@@ -11,7 +11,7 @@ import PaperPreview from '@/components/app/PaperPreview';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileSignature } from 'lucide-react';
+import { FileSignature, Sigma } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const questionTypeOrder = { 'MCQ': 1, 'SAQ': 2, 'Long': 3 };
@@ -29,16 +29,30 @@ function DashboardComponent() {
         class: params.class || initialConfig.class,
         subject: params.subject || initialConfig.subject,
         chapter: params.chapter || initialConfig.chapter,
-        totalMarks: Number(params.totalMarks) || initialConfig.totalMarks,
-        mcqCount: Number(params.mcqCount) || initialConfig.mcqCount,
-        saqCount: Number(params.saqCount) || initialConfig.saqCount,
-        longQuestionCount: Number(params.longQuestionCount) || initialConfig.longQuestionCount,
+        mcq: {
+          count: Number(params['mcq.count']) || initialConfig.mcq.count,
+          marks: Number(params['mcq.marks']) || initialConfig.mcq.marks,
+        },
+        saq: {
+          count: Number(params['saq.count']) || initialConfig.saq.count,
+          marks: Number(params['saq.marks']) || initialConfig.saq.marks,
+        },
+        long: {
+          count: Number(params['long.count']) || initialConfig.long.count,
+          marks: Number(params['long.marks']) || initialConfig.long.marks,
+        },
       };
       setConfig(newConfig);
     } else {
         router.push('/generate-pattern');
     }
   }, [searchParams, router]);
+
+  const totalMarks = useMemo(() => {
+    return (config.mcq.count * config.mcq.marks) + 
+           (config.saq.count * config.saq.marks) + 
+           (config.long.count * config.long.marks);
+  }, [config]);
   
   const filteredQuestions = useMemo(() => {
     return questionBank.filter(
@@ -50,7 +64,18 @@ function DashboardComponent() {
   }, [config.subject, config.class, config.chapter]);
   
   const handleGoBack = () => {
-    const query = new URLSearchParams(config as any).toString();
+     const params = {
+        class: config.class,
+        subject: config.subject,
+        chapter: config.chapter,
+        'mcq.count': String(config.mcq.count),
+        'mcq.marks': String(config.mcq.marks),
+        'saq.count': String(config.saq.count),
+        'saq.marks': String(config.saq.marks),
+        'long.count': String(config.long.count),
+        'long.marks': String(config.long.marks),
+    };
+    const query = new URLSearchParams(params).toString();
     router.push(`/generate-pattern?${query}`);
   }
 
@@ -111,19 +136,26 @@ function DashboardComponent() {
             <Card className="border-primary/20 shadow-lg shadow-primary/5">
                 <CardHeader className="pb-4">
                     <div className="flex items-center gap-4">
-                    <FileSignature className="w-8 h-8 text-amber-400" />
-                    <div>
-                        <CardTitle className="font-headline text-2xl text-amber-400">আপনার কাঠামো</CardTitle>
-                        <CardDescription> বিষয়: {config.subject}, শ্রেণী: {config.class}, মোট নম্বর: {config.totalMarks}</CardDescription>
-                    </div>
+                        <FileSignature className="w-8 h-8 text-amber-400" />
+                        <div>
+                            <CardTitle className="font-headline text-2xl text-amber-400">আপনার কাঠামো</CardTitle>
+                            <CardDescription> বিষয়: {config.subject}, শ্রেণী: {config.class}</CardDescription>
+                        </div>
                     </div>
                 </CardHeader>
-                <CardContent className='pt-0'>
-                <div className='flex flex-wrap gap-2'>
-                    <Badge variant="secondary">MCQ: {config.mcqCount}</Badge>
-                    <Badge variant="secondary">SAQ: {config.saqCount}</Badge>
-                    <Badge variant="secondary">বড় প্রশ্ন: {config.longQuestionCount}</Badge>
-                </div>
+                <CardContent className='pt-0 flex flex-col gap-4'>
+                    <div className='flex flex-wrap gap-2'>
+                        <Badge variant="secondary">MCQ: {config.mcq.count}টি x {config.mcq.marks} নম্বর</Badge>
+                        <Badge variant="secondary">SAQ: {config.saq.count}টি x {config.saq.marks} নম্বর</Badge>
+                        <Badge variant="secondary">বড় প্রশ্ন: {config.long.count}টি x {config.long.marks} নম্বর</Badge>
+                    </div>
+                     <div className="flex items-center gap-2 text-right self-end">
+                           <Sigma className="w-5 h-5 text-amber-400" />
+                           <div>
+                            <p className='text-xs text-muted-foreground'>মোট নম্বর</p>
+                            <p className='font-bold text-xl text-amber-400'>{totalMarks}</p>
+                           </div>
+                        </div>
                 </CardContent>
             </Card>
             <QuestionBank
@@ -136,6 +168,7 @@ function DashboardComponent() {
             <PaperPreview
               config={config}
               questions={selectedQuestions}
+              totalMarks={totalMarks}
               onRemoveQuestion={handleRemoveQuestion}
               onReset={handleReset}
               onAddAiQuestions={handleAddAiQuestions}

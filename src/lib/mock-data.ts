@@ -5,10 +5,9 @@ export const initialConfig: PaperConfig = {
   class: '10',
   subject: 'গণিত',
   chapter: 'all',
-  totalMarks: 90,
-  mcqCount: 15,
-  saqCount: 10,
-  longQuestionCount: 5,
+  mcq: { count: 10, marks: 1 },
+  saq: { count: 10, marks: 2 },
+  long: { count: 8, marks: 5 },
 };
 
 export const classList = ['5', '6', '7', '8', '9', '10', '11', '12'];

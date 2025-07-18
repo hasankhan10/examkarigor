@@ -88,7 +88,7 @@
 
 @media print {
   body {
-    background-image: none;
+    background-image: none !important;
   }
   .no-print {
     display: none !important;
@@ -118,5 +118,10 @@
   }
   .print-border {
     border-color: #ccc !important;
+  }
+  .print-paper-content {
+    height: auto !important;
+    overflow: visible !important;
+    padding-right: 0 !important;
   }
 }

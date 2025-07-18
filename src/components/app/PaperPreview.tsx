@@ -4,7 +4,6 @@
 import type { PaperConfig, Question, AiQuestion } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Printer, Trash2, X, FileText } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import GeneratePaperDialog from './GeneratePaperDialog';
@@ -13,13 +12,14 @@ import GeneratePaperDialog from './GeneratePaperDialog';
 interface PaperPreviewProps {
   config: PaperConfig;
   questions: Question[];
+  totalMarks: number;
   onRemoveQuestion: (questionId: number) => void;
   onReset: () => void;
   onAddAiQuestions: (questions: AiQuestion[]) => void;
 }
 
-export default function PaperPreview({ config, questions, onRemoveQuestion, onReset, onAddAiQuestions }: PaperPreviewProps) {
-  const totalMarks = questions.reduce((sum, q) => sum + q.marks, 0);
+export default function PaperPreview({ config, questions, totalMarks, onRemoveQuestion, onReset, onAddAiQuestions }: PaperPreviewProps) {
+  const selectedTotalMarks = questions.reduce((sum, q) => sum + q.marks, 0);
 
   const handlePrint = () => {
     window.print();
@@ -41,7 +41,7 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
   let questionCounter = 0;
 
   return (
-    <Card className="sticky top-24 border-amber-500/20 shadow-lg shadow-amber-500/5 print-container print:static">
+    <Card className="sticky top-24 border-amber-500/20 shadow-lg shadow-amber-500/5 print-container">
       <div className="print-card">
         <CardHeader className="print-card-header no-print">
            <div className="flex items-center justify-between">
@@ -58,14 +58,14 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
            </div>
         </CardHeader>
         <CardContent className="print-card-content">
-          <div className="p-4 border rounded-lg bg-background print-border">
+          <div className="p-4 border rounded-lg bg-background print-border print:!p-0 print:!border-0">
             <header className="text-center mb-6">
               <h2 className="text-xl font-bold font-headline print-text-black">{config.subject} পরীক্ষা</h2>
               <p className="print-text-black">শ্রেণী: {config.class}</p>
-              <p className="print-text-black">পূর্ণমান: {config.totalMarks}</p>
+              <p className="print-text-black">পূর্ণমান: {totalMarks}</p>
             </header>
-            <ScrollArea className="h-[calc(100vh-32rem)] min-h-96 print:h-auto print:overflow-visible">
-                <div className="space-y-6 pr-4 print:pr-0">
+            <div className="print-paper-content">
+                <div className="space-y-6">
                   {questions.length > 0 ? (
                     questionTypeOrder.map(type => {
                       const group = groupedQuestions[type];
@@ -111,18 +111,18 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
                       )
                     })
                   ) : (
-                    <div className="text-center text-muted-foreground py-16 no-print">
+                    <div className="text-center text-muted-foreground py-16 no-print h-[calc(100vh-32rem)] min-h-96 flex flex-col justify-center items-center">
                       <p>প্রশ্ন ভান্ডার থেকে প্রশ্ন যোগ করুন।</p>
                       <p className="text-sm">আপনার নির্বাচিত প্রশ্নগুলি এখানে প্রদর্শিত হবে।</p>
                     </div>
                   )}
                 </div>
-            </ScrollArea>
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-between items-center no-print">
             <div className="text-lg font-bold">
-                <span className="text-muted-foreground">মোট:</span> <span className="text-amber-400">{totalMarks}</span> / {config.totalMarks}
+                <span className="text-muted-foreground">মোট:</span> <span className="text-amber-400">{selectedTotalMarks}</span> / {totalMarks}
             </div>
             <div className="flex gap-2">
                  <Button variant="outline" onClick={onReset} disabled={questions.length === 0}>

@@ -2,10 +2,9 @@ export type PaperConfig = {
   class: string;
   subject: string;
   chapter: string;
-  totalMarks: number;
-  mcqCount: number;
-  saqCount: number;
-  longQuestionCount: number;
+  mcq: { count: number; marks: number };
+  saq: { count: number; marks: number };
+  long: { count: number; marks: number };
 };
 
 export type SingleQuestion = {

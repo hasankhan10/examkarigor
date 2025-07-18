@@ -12,14 +12,18 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
+const QuestionTypeDetailSchema = z.object({
+  count: z.number().describe('The number of questions of this type.'),
+  marks: z.number().describe('The marks allocated to each question of this type.'),
+});
+
 const GenerateRandomPaperInputSchema = z.object({
   class: z.string().describe('The class for which to generate the exam paper (e.g., 5-12).'),
   subject: z.string().describe('The subject for which to generate the exam paper (e.g., Bengali, Math, Science).'),
   chapter: z.string().describe('The chapter for which to generate the exam paper (e.g., specific topics within the subject).'),
-  totalMarks: z.number().describe('The total marks for the exam paper.'),
-  mcqCount: z.number().describe('The number of multiple-choice questions in the paper.'),
-  saqCount: z.number().describe('The number of short-answer questions in the paper.'),
-  longQuestionCount: z.number().describe('The number of long questions in the paper.'),
+  mcq: QuestionTypeDetailSchema.describe('Details for Multiple Choice Questions.'),
+  saq: QuestionTypeDetailSchema.describe('Details for Short Answer Questions.'),
+  long: QuestionTypeDetailSchema.describe('Details for Long Questions.'),
 });
 
 export type GenerateRandomPaperInput = z.infer<typeof GenerateRandomPaperInputSchema>;
@@ -56,21 +60,28 @@ You will generate a random exam paper based on the following criteria:
 Class: {{{class}}}
 Subject: {{{subject}}}
 Chapter: {{{chapter}}}
-Total Marks: {{{totalMarks}}}
 
-Your primary goal is to generate the exact number of questions for each type as specified below:
-- Number of MCQs: {{{mcqCount}}}
-- Number of SAQs: {{{saqCount}}}
-- Number of Long Questions: {{{longQuestionCount}}}
+Your primary goal is to generate the exact number of questions for each type as specified below, with the specified marks for each question.
+- Multiple Choice Questions (MCQ):
+  - Number of questions: {{{mcq.count}}}
+  - Marks per question: {{{mcq.marks}}}
+- Short Answer Questions (SAQ):
+  - Number of questions: {{{saq.count}}}
+  - Marks per question: {{{saq.marks}}}
+- Long Questions:
+  - Number of questions: {{{long.count}}}
+  - Marks per question: {{{long.marks}}}
 
-You MUST generate exactly {{{mcqCount}}} MCQ questions, {{{saqCount}}} SAQ questions, and {{{longQuestionCount}}} Long questions.
+This structure is a strict, non-negotiable requirement. You MUST generate exactly {{{mcq.count}}} MCQ questions, each worth {{{mcq.marks}}} marks. You MUST generate exactly {{{saq.count}}} SAQ questions, each worth {{{saq.marks}}} marks. You MUST generate exactly {{{long.count}}} Long questions, each worth {{{long.marks}}} marks.
+
+The total marks for the paper will be ({{{mcq.count}}} * {{{mcq.marks}}}) + ({{{saq.count}}} * {{{saq.marks}}}) + ({{{long.count}}} * {{{long.marks}}}). Your generated question set MUST match this structure perfectly.
+
 For some questions, you can provide an alternative "OR" question by adding a second item to the 'alternatives' array for that question.
 
-The generated questions must be pertinent to the syllabus of WBBSE/WBCHSE board.
+The generated questions must be pertinent to the syllabus of the WBBSE/WBCHSE board.
 All questions and instructions should be in Bengali by default, using Unicode for Bengali script.
 For MCQs, provide 4 distinct options.
 
-VERY IMPORTANT: You must distribute the marks among the questions so that the sum of all marks EXACTLY equals the total marks specified ({{{totalMarks}}}). This is a strict, non-negotiable requirement. Do not exceed or fall short of this total.
 Return the output as a JSON object containing a list of questions.
 `,
 });
