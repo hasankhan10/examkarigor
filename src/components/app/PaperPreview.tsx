@@ -49,7 +49,7 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
               <p className="print-text-black">শ্রেণী: {config.class}</p>
               <p className="print-text-black">পূর্ণমান: {config.totalMarks}</p>
             </header>
-            <Droppable droppableId="paper-preview" isCombineEnabled={false} ignoreContainerClipping={false}>
+            <Droppable droppableId="paper-preview" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false}>
               {(provided) => (
                 <ScrollArea 
                     {...provided.droppableProps}
