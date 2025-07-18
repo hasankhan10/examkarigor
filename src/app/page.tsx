@@ -1,66 +1,52 @@
-'use client';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 
-import { useState, useMemo } from 'react';
-import type { PaperConfig, Question } from '@/lib/types';
-import { initialConfig, questionBank } from '@/lib/mock-data';
-import Header from '@/components/app/Header';
-import PaperConfiguration from '@/components/app/PaperConfiguration';
-import QuestionBank from '@/components/app/QuestionBank';
-import PaperPreview from '@/components/app/PaperPreview';
-
-export default function Home() {
-  const [config, setConfig] = useState<PaperConfig>(initialConfig);
-  const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
-
-  const handleAddQuestion = (question: Question) => {
-    setSelectedQuestions((prev) => {
-      if (prev.find((q) => q.id === question.id)) {
-        return prev;
-      }
-      return [...prev, question];
-    });
-  };
-
-  const handleRemoveQuestion = (questionId: number) => {
-    setSelectedQuestions((prev) => prev.filter((q) => q.id !== questionId));
-  };
-
-  const handleReset = () => {
-    setSelectedQuestions([]);
-  };
-
-  const filteredQuestions = useMemo(() => {
-    return questionBank.filter(
-      (q) =>
-        q.subject === config.subject &&
-        q.class === config.class &&
-        (config.chapter === 'all' || q.chapter === config.chapter)
-    );
-  }, [config.subject, config.class, config.chapter]);
-
+export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <Header />
-      <main className="flex-1 w-full max-w-screen-2xl mx-auto p-4 md:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          <div className="lg:col-span-2 flex flex-col gap-8">
-            <PaperConfiguration config={config} setConfig={setConfig} />
-            <QuestionBank
-              questions={filteredQuestions}
-              onAddQuestion={handleAddQuestion}
-            />
+    <div className="relative flex flex-col min-h-screen bg-background text-foreground overflow-hidden">
+      <div className="absolute inset-0 z-0 opacity-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-transparent to-background"></div>
+        <div className="absolute bottom-0 left-0 h-1/2 w-1/2 rounded-full bg-amber-500/10 blur-3xl"></div>
+        <div className="absolute top-0 right-0 h-1/2 w-1/2 rounded-full bg-primary/20 blur-3xl"></div>
+      </div>
+      
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
+          <h1 className="text-2xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">
+            পরীক্ষা কারিগর
+          </h1>
+          <Button asChild variant="ghost">
+            <Link href="/dashboard">লগইন করুন</Link>
+          </Button>
+        </div>
+      </header>
+
+      <main className="flex-1 flex items-center justify-center">
+        <div className="relative z-10 container mx-auto px-4 text-center">
+          <div className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider text-amber-400 uppercase rounded-full bg-primary/30 border border-amber-500/30">
+            শিক্ষকদের জন্য একটি বিপ্লবী টুল
           </div>
-          <div className="lg:col-span-3">
-            <PaperPreview
-              config={config}
-              questions={selectedQuestions}
-              onRemoveQuestion={handleRemoveQuestion}
-              onReset={handleReset}
-              setSelectedQuestions={setSelectedQuestions}
-            />
-          </div>
+          <h2 className="text-5xl md:text-7xl font-headline font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/70 mb-6 leading-tight">
+            প্রশ্নপত্র তৈরি করুন, <br /> নিমিষে ও নিখুঁতভাবে।
+          </h2>
+          <p className="max-w-3xl mx-auto text-lg text-muted-foreground mb-10">
+            ‘পরীক্ষা কারিগর’ আপনার শিক্ষাদানের পদ্ধতিকে আরও সহজ ও কার্যকর করে তুলবে। আধুনিক প্রযুক্তির সাহায্যে এখন থেকে প্রশ্নপত্র তৈরি হবে আরও দ্রুত এবং সুন্দরভাবে।
+          </p>
+          <Button asChild size="lg" className="bg-amber-500 text-accent-foreground hover:bg-amber-600 text-lg py-7 px-10 shadow-lg shadow-amber-500/20 transition-all duration-300 hover:scale-105">
+            <Link href="/dashboard">
+              প্রশ্নপত্র তৈরি করুন
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
         </div>
       </main>
+
+      <footer className="w-full py-6 text-center text-muted-foreground text-sm z-10">
+        <div className="container mx-auto">
+          <p>&copy; {new Date().getFullYear()} পরীক্ষা কারিগর। সর্বস্বত্ব সংরক্ষিত।</p>
+        </div>
+      </footer>
     </div>
   );
 }
