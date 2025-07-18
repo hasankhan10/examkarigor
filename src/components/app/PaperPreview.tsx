@@ -1,7 +1,6 @@
 
 'use client';
 
-import type { Dispatch, SetStateAction } from 'react';
 import type { PaperConfig, Question } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,14 +10,17 @@ import { Badge } from '../ui/badge';
 import GeneratePaperDialog from './GeneratePaperDialog';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
+type AiQuestion = Omit<Question, 'id' | 'class' | 'subject' | 'chapter'>;
+
 interface PaperPreviewProps {
   config: PaperConfig;
   questions: Question[];
   onRemoveQuestion: (questionId: number) => void;
   onReset: () => void;
+  onAddAiQuestions: (questions: AiQuestion[]) => void;
 }
 
-export default function PaperPreview({ config, questions, onRemoveQuestion, onReset }: PaperPreviewProps) {
+export default function PaperPreview({ config, questions, onRemoveQuestion, onReset, onAddAiQuestions }: PaperPreviewProps) {
   const totalMarks = questions.reduce((sum, q) => sum + q.marks, 0);
 
   const handlePrint = () => {
@@ -28,17 +30,17 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
   return (
     <Card className="sticky top-24 border-amber-500/20 shadow-lg shadow-amber-500/5 print-container">
       <div className="print-card">
-        <CardHeader className="print-card-header">
+        <CardHeader className="print-card-header no-print">
            <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <FileText className="w-8 h-8 text-amber-400" />
                 <div>
-                  <CardTitle className="font-headline text-2xl text-amber-400 print-text-black">প্রশ্নপত্রের পূর্বরূপ</CardTitle>
+                  <CardTitle className="font-headline text-2xl text-amber-400">প্রশ্নপত্রের পূর্বরূপ</CardTitle>
                   <CardDescription>আপনার তৈরি করা প্রশ্নপত্রটি এখানে দেখুন</CardDescription>
                 </div>
               </div>
               <div className="no-print">
-                 <GeneratePaperDialog config={config} />
+                 <GeneratePaperDialog config={config} onAccept={onAddAiQuestions} />
               </div>
            </div>
         </CardHeader>
@@ -92,7 +94,7 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
                           </Draggable>
                         ))
                       ) : (
-                        <div className="text-center text-muted-foreground py-16">
+                        <div className="text-center text-muted-foreground py-16 no-print">
                           <p>প্রশ্ন ভান্ডার থেকে প্রশ্ন এখানে টেনে আনুন।</p>
                           <p className="text-sm">আপনার নির্বাচিত প্রশ্নগুলি এখানে প্রদর্শিত হবে।</p>
                         </div>

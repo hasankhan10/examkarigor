@@ -12,13 +12,17 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { generateRandomPaper } from '@/ai/flows/generate-random-paper.ts';
-import type { PaperConfig } from '@/lib/types';
-import { Loader2, Bot } from 'lucide-react';
+import type { PaperConfig, Question } from '@/lib/types';
+import { Loader2, Bot, Check, X } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { ScrollArea } from '../ui/scroll-area';
+import { Badge } from '../ui/badge';
+
+type AiQuestion = Omit<Question, 'id' | 'class' | 'subject' | 'chapter'>;
 
 interface GeneratePaperDialogProps {
   config: PaperConfig;
+  onAccept: (questions: AiQuestion[]) => void;
 }
 
 const LoadingSpinner = () => (
@@ -29,42 +33,39 @@ const LoadingSpinner = () => (
   </div>
 );
 
-const FormattedPaper = ({ paper }: { paper: string }) => {
-  const sections = paper.split('\n\n');
+const FormattedPaper = ({ questions }: { questions: AiQuestion[] }) => {
   return (
     <div className="space-y-4 text-left">
-      {sections.map((section, i) => {
-        const lines = section.split('\n');
-        const title = lines[0];
-        const questions = lines.slice(1);
-        if (title.startsWith('##')) {
-          return (
-            <div key={i}>
-              <h3 className="text-lg font-bold font-headline mb-2 text-amber-400">{title.replace('##', '').trim()}</h3>
-              <ul className="space-y-2 list-inside">
-                {questions.map((q, j) => <li key={j} className="ml-4">{q}</li>)}
-              </ul>
-            </div>
-          );
-        }
-        return <p key={i}>{section}</p>
-      })}
+      {questions.map((q, i) => (
+        <div key={i} className="flex items-start gap-2 text-sm">
+          <span className="font-bold">{i + 1}.</span>
+          <div className="flex-1">
+            <p>{q.text}</p>
+            {q.options && (
+              <ol className="list-alpha list-inside grid grid-cols-2 gap-2 mt-2">
+                {q.options.map((opt, j) => <li key={j}>{opt}</li>)}
+              </ol>
+            )}
+          </div>
+          <Badge variant="outline">[{q.marks}]</Badge>
+        </div>
+      ))}
     </div>
   )
 }
 
-export default function GeneratePaperDialog({ config }: GeneratePaperDialogProps) {
+export default function GeneratePaperDialog({ config, onAccept }: GeneratePaperDialogProps) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [generatedPaper, setGeneratedPaper] = useState<string | null>(null);
+  const [generatedQuestions, setGeneratedQuestions] = useState<AiQuestion[] | null>(null);
   const { toast } = useToast();
 
-  const handleSubmit = async () => {
+  const handleGenerate = async () => {
     setIsLoading(true);
-    setGeneratedPaper(null);
+    setGeneratedQuestions(null);
     try {
       const result = await generateRandomPaper(config);
-      setGeneratedPaper(result.examPaper);
+      setGeneratedQuestions(result.questions);
       toast({
         title: "আপনার মাস্টারপিস প্রস্তুত!",
         description: "AI দ্বারা তৈরি প্রশ্নপত্র সফলভাবে জেনারেট হয়েছে।",
@@ -81,10 +82,21 @@ export default function GeneratePaperDialog({ config }: GeneratePaperDialogProps
     }
   };
 
+  const handleAccept = () => {
+    if (generatedQuestions) {
+        onAccept(generatedQuestions);
+        toast({
+            title: 'সফলভাবে যোগ করা হয়েছে!',
+            description: 'AI দ্বারা তৈরি প্রশ্নগুলি আপনার প্রশ্নপত্রে যোগ করা হয়েছে।',
+        });
+        handleOpenChange(false);
+    }
+  }
+
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (!isOpen) {
-        setGeneratedPaper(null);
+        setGeneratedQuestions(null);
         setIsLoading(false);
     }
   }
@@ -108,11 +120,11 @@ export default function GeneratePaperDialog({ config }: GeneratePaperDialogProps
         <div className="py-4 min-h-[200px] flex items-center justify-center">
             {isLoading ? (
                 <LoadingSpinner />
-            ) : generatedPaper ? (
+            ) : generatedQuestions ? (
                 <Card className="w-full bg-primary/20 max-h-96">
                     <CardContent className="p-4">
-                        <ScrollArea className="h-80">
-                            <FormattedPaper paper={generatedPaper} />
+                        <ScrollArea className="h-80 pr-4">
+                           <FormattedPaper questions={generatedQuestions} />
                         </ScrollArea>
                     </CardContent>
                 </Card>
@@ -125,15 +137,38 @@ export default function GeneratePaperDialog({ config }: GeneratePaperDialogProps
         </div>
 
         <DialogFooter>
-          <Button type="button" variant="secondary" onClick={() => handleOpenChange(false)}>বন্ধ করুন</Button>
-          <Button 
-            onClick={handleSubmit} 
-            disabled={isLoading}
-            className="bg-amber-500 text-accent-foreground hover:bg-amber-600"
-          >
-            {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Bot className="mr-2 h-4 w-4" />}
-            {generatedPaper ? 'আবার জেনারেট করুন' : 'জেনারেট করুন'}
-          </Button>
+            {generatedQuestions ? (
+                <>
+                    <Button type="button" variant="secondary" onClick={() => handleOpenChange(false)}>
+                        <X className="mr-2 h-4 w-4" />
+                        বন্ধ করুন
+                    </Button>
+                    <Button onClick={handleAccept} className="bg-green-600 text-white hover:bg-green-700">
+                        <Check className="mr-2 h-4 w-4" />
+                        গ্রহণ করুন
+                    </Button>
+                    <Button 
+                        onClick={handleGenerate} 
+                        disabled={isLoading}
+                        className="bg-amber-500 text-accent-foreground hover:bg-amber-600"
+                    >
+                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Bot className="mr-2 h-4 w-4" />}
+                        আবার জেনারেট করুন
+                    </Button>
+                </>
+            ) : (
+                <>
+                    <Button type="button" variant="secondary" onClick={() => handleOpenChange(false)}>বন্ধ করুন</Button>
+                    <Button 
+                        onClick={handleGenerate} 
+                        disabled={isLoading}
+                        className="bg-amber-500 text-accent-foreground hover:bg-amber-600"
+                    >
+                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Bot className="mr-2 h-4 w-4" />}
+                        জেনারেট করুন
+                    </Button>
+                </>
+            )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

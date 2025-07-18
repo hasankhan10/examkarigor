@@ -23,8 +23,15 @@ const GenerateRandomPaperInputSchema = z.object({
 
 export type GenerateRandomPaperInput = z.infer<typeof GenerateRandomPaperInputSchema>;
 
+const QuestionSchema = z.object({
+    type: z.enum(['MCQ', 'SAQ', 'Long']).describe('The type of question.'),
+    text: z.string().describe('The question text.'),
+    options: z.array(z.string()).optional().describe('A list of options for MCQ questions.'),
+    marks: z.number().describe('The marks for this question.'),
+});
+
 const GenerateRandomPaperOutputSchema = z.object({
-  examPaper: z.string().describe('The generated exam paper in a suitable format (e.g., Markdown or JSON).'),
+  questions: z.array(QuestionSchema).describe('The generated list of questions for the exam paper.'),
 });
 
 export type GenerateRandomPaperOutput = z.infer<typeof GenerateRandomPaperOutputSchema>;
@@ -49,8 +56,11 @@ Number of MCQs: {{{mcqCount}}}
 Number of SAQs: {{{saqCount}}}
 Number of Long Questions: {{{longQuestionCount}}}
 
-The exam paper should be formatted in Markdown, with clear sections for each question type (MCQs, SAQs, Long Questions). Ensure the total marks for the paper match the specified total marks.
-All questions and instructions should be in Bengali by default, using Unicode for Bengali script. The generated questions must be pertinent to the syllabus of WBBSE/WBCHSE board.
+The generated questions must be pertinent to the syllabus of WBBSE/WBCHSE board.
+All questions and instructions should be in Bengali by default, using Unicode for Bengali script.
+For MCQs, provide 4 distinct options.
+Ensure the generated question types match the requested counts. The sum of marks for all questions should be as close as possible to the total marks specified.
+Return the output as a JSON object containing a list of questions.
 `,
 });
 

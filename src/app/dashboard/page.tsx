@@ -51,7 +51,7 @@ function DashboardComponent() {
       (q) =>
         q.subject === config.subject &&
         q.class === config.class &&
-        (config.chapter === 'all' || q.chapter === config.gitchapter)
+        (config.chapter === 'all' || q.chapter === config.chapter)
     );
   }, [config.subject, config.class, config.chapter]);
   
@@ -100,11 +100,22 @@ function DashboardComponent() {
     setSelectedQuestions([]);
   };
 
+  const handleAddAiQuestions = (aiQuestions: Omit<Question, 'id' | 'class' | 'subject' | 'chapter'>[]) => {
+    const newQuestions: Question[] = aiQuestions.map((q, index) => ({
+      ...q,
+      id: Date.now() + index, // Create a unique ID
+      class: config.class,
+      subject: config.subject,
+      chapter: config.chapter,
+    }));
+    setSelectedQuestions(prev => [...prev, ...newQuestions]);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <Header />
       <main className="flex-1 w-full max-w-screen-2xl mx-auto p-4 md:p-8">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6 no-print">
             <div>
                 <h1 className="font-headline text-3xl text-amber-400">প্রশ্নপত্র তৈরি করুন</h1>
                 <p className="text-muted-foreground">প্রশ্ন ভান্ডার থেকে প্রশ্ন নির্বাচন করুন অথবা AI দিয়ে তৈরি করুন।</p>
@@ -116,7 +127,7 @@ function DashboardComponent() {
         </div>
         <DragDropContext onDragEnd={onDragEnd}>
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-            <div className="lg:col-span-2 flex flex-col gap-8">
+            <div className="lg:col-span-2 flex flex-col gap-8 no-print">
                 <Card className="border-primary/20 shadow-lg shadow-primary/5">
                     <CardHeader className="pb-4">
                         <div className="flex items-center gap-4">
@@ -145,6 +156,7 @@ function DashboardComponent() {
                 questions={selectedQuestions}
                 onRemoveQuestion={handleRemoveQuestion}
                 onReset={handleReset}
+                onAddAiQuestions={handleAddAiQuestions}
                 />
             </div>
             </div>
