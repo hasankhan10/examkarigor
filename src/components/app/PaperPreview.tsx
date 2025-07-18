@@ -98,7 +98,7 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
     <Card className="sticky top-24 border-amber-500/20 shadow-lg shadow-amber-500/5 print-container">
       <div className="print-card">
         <CardHeader className="print-card-header no-print">
-           <div className="flex items-center justify-between">
+           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <FileText className="w-8 h-8 text-amber-400" />
                 <div>
@@ -106,7 +106,7 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
                   <CardDescription>আপনার তৈরি করা প্রশ্নপত্রটি এখানে দেখুন</CardDescription>
                 </div>
               </div>
-              <div className="no-print">
+              <div className="no-print w-full sm:w-auto">
                  <GeneratePaperDialog config={config} onAccept={onAddAiQuestions} />
               </div>
            </div>
@@ -142,7 +142,7 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
                                       {altIndex > 0 && <p className='font-bold my-1'>অথবা</p>}
                                       <p>{alt.text}</p>
                                       {alt.options && (
-                                        <ol className="list-alpha list-inside grid grid-cols-2 gap-2 mt-2">
+                                        <ol className="list-alpha list-inside grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
                                           {alt.options.map((opt, i) => <li key={i}>{opt}</li>)}
                                         </ol>
                                       )}
@@ -174,16 +174,16 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between items-center no-print">
+        <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4 no-print">
             <div className="text-lg font-bold">
                 <span className="text-muted-foreground">মোট:</span> <span className="text-amber-400">{selectedTotalMarks}</span> / {totalMarks}
             </div>
-            <div className="flex gap-2">
-                 <Button variant="outline" onClick={onReset} disabled={questions.length === 0}>
+            <div className="flex gap-2 w-full sm:w-auto">
+                 <Button variant="outline" onClick={onReset} disabled={questions.length === 0} className="w-1/2 sm:w-auto">
                     <Trash2 className="mr-2 h-4 w-4" />
                     রিসেট
                 </Button>
-                <Button onClick={handleDownloadPdf} className="bg-amber-500 text-accent-foreground hover:bg-amber-600" disabled={questions.length === 0 || isDownloading}>
+                <Button onClick={handleDownloadPdf} className="bg-amber-500 text-accent-foreground hover:bg-amber-600 w-1/2 sm:w-auto" disabled={questions.length === 0 || isDownloading}>
                     {isDownloading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Printer className="mr-2 h-4 w-4" />}
                     {isDownloading ? 'ডাউনলোড হচ্ছে...' : 'প্রিন্ট / PDF'}
                 </Button>

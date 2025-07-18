@@ -120,12 +120,12 @@ function DashboardComponent() {
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <Header />
       <main className="flex-1 w-full max-w-screen-2xl mx-auto p-4 md:p-8">
-        <div className="flex justify-between items-center mb-6 no-print">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 no-print">
             <div>
                 <h1 className="font-headline text-3xl text-amber-400">প্রশ্নপত্র তৈরি করুন</h1>
                 <p className="text-muted-foreground">প্রশ্ন ভান্ডার থেকে প্রশ্ন নির্বাচন করুন অথবা AI দিয়ে তৈরি করুন।</p>
             </div>
-            <Button onClick={handleGoBack} variant="outline">
+            <Button onClick={handleGoBack} variant="outline" className="w-full sm:w-auto">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 কাঠামো পরিবর্তন করুন
             </Button>

@@ -112,7 +112,7 @@ export default function GeneratePatternPage() {
         <main className="flex-1 w-full flex items-center justify-center p-4 md:p-8">
             <Card className="w-full max-w-2xl border-primary/20 shadow-lg shadow-primary/5">
                 <CardHeader>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <FileSignature className="w-8 h-8 text-amber-400" />
                             <div>
@@ -120,7 +120,7 @@ export default function GeneratePatternPage() {
                                 <CardDescription>আপনার পরীক্ষার প্রশ্নপত্রের কাঠামো সেট করুন</CardDescription>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2 text-right">
+                        <div className="flex items-center gap-2 text-right self-end sm:self-center">
                            <Sigma className="w-6 h-6 text-amber-400" />
                            <div>
                             <p className='text-xs text-muted-foreground'>মোট নম্বর</p>
@@ -179,7 +179,7 @@ export default function GeneratePatternPage() {
                                     </Tooltip>
                                 </TooltipProvider>
                             </Label>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="mcqCount">সংখ্যা</Label>
                                     <Input type="number" id="mcqCount" value={config.mcq.count} onChange={handleInputChange('mcq', 'count')} />
@@ -201,7 +201,7 @@ export default function GeneratePatternPage() {
                                     </Tooltip>
                                 </TooltipProvider>
                             </Label>
-                           <div className="grid grid-cols-2 gap-4">
+                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="saqCount">সংখ্যা</Label>
                                     <Input type="number" id="saqCount" value={config.saq.count} onChange={handleInputChange('saq', 'count')} />
@@ -223,7 +223,7 @@ export default function GeneratePatternPage() {
                                     </Tooltip>
                                 </TooltipProvider>
                             </Label>
-                           <div className="grid grid-cols-2 gap-4">
+                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="longCount">সংখ্যা</Label>
                                     <Input type="number" id="longCount" value={config.long.count} onChange={handleInputChange('long', 'count')} />

@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
@@ -13,7 +14,7 @@ export default function LandingPage() {
       
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
-          <Link href="/" className="text-2xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">
+          <Link href="/" className="text-xl md:text-2xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">
             EXAM কারিগর
           </Link>
           <Button asChild variant="ghost">
@@ -27,13 +28,13 @@ export default function LandingPage() {
           <div className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider text-amber-400 uppercase rounded-full bg-primary/30 border border-amber-500/30">
             শিক্ষকদের জন্য একটি বিপ্লবী টুল
           </div>
-          <h2 className="text-5xl md:text-7xl font-headline font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/70 mb-6 leading-normal md:leading-relaxed">
+          <h2 className="text-4xl md:text-7xl font-headline font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/70 mb-6 leading-normal md:leading-relaxed">
             প্রশ্নপত্র তৈরি করুন, <br /> নিমিষে ও নিখুঁতভাবে।
           </h2>
-          <p className="max-w-3xl mx-auto text-lg text-muted-foreground mb-10">
+          <p className="max-w-3xl mx-auto text-base md:text-lg text-muted-foreground mb-10">
             ‘EXAM কারিগর’ আপনার শিক্ষাদানের পদ্ধতিকে আরও সহজ ও কার্যকর করে তুলবে। আধুনিক প্রযুক্তির সাহায্যে এখন থেকে প্রশ্নপত্র তৈরি হবে আরও দ্রুত এবং সুন্দরভাবে।
           </p>
-          <Button asChild size="lg" className="bg-amber-500 text-accent-foreground hover:bg-amber-600 text-lg py-7 px-10 shadow-lg shadow-amber-500/20 transition-all duration-300 hover:scale-105">
+          <Button asChild size="lg" className="bg-amber-500 text-accent-foreground hover:bg-amber-600 text-base md:text-lg py-5 px-8 md:py-7 md:px-10 shadow-lg shadow-amber-500/20 transition-all duration-300 hover:scale-105">
             <Link href="/generate-pattern">
               প্রশ্নপত্র তৈরি করুন
               <ArrowRight className="ml-2 h-5 w-5" />
