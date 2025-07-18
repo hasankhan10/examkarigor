@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -68,7 +69,8 @@ For some questions, you can provide an alternative "OR" question by adding a sec
 The generated questions must be pertinent to the syllabus of WBBSE/WBCHSE board.
 All questions and instructions should be in Bengali by default, using Unicode for Bengali script.
 For MCQs, provide 4 distinct options.
-Distribute the marks among the questions so the sum EXACTLY equals the total marks specified ({{{totalMarks}}}). This is a strict requirement.
+
+VERY IMPORTANT: You must distribute the marks among the questions so that the sum of all marks EXACTLY equals the total marks specified ({{{totalMarks}}}). This is a strict, non-negotiable requirement. Do not exceed or fall short of this total.
 Return the output as a JSON object containing a list of questions.
 `,
 });
