@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import type { PaperConfig, Question } from '@/lib/types';
+import type { PaperConfig, Question, AiQuestion } from '@/lib/types';
 import { initialConfig, questionBank } from '@/lib/mock-data';
 import Header from '@/components/app/Header';
 import QuestionBank from '@/components/app/QuestionBank';
@@ -80,7 +80,7 @@ function DashboardComponent() {
     setSelectedQuestions([]);
   };
 
-  const handleAddAiQuestions = (aiQuestions: Omit<Question, 'id' | 'class' | 'subject' | 'chapter'>[]) => {
+  const handleAddAiQuestions = (aiQuestions: AiQuestion[]) => {
     const newQuestions: Question[] = aiQuestions.map((q, index) => ({
       ...q,
       id: Date.now() + index, // Create a unique ID

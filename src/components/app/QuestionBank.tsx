@@ -20,7 +20,7 @@ export default function QuestionBank({ questions, onAddQuestion, selectedIds }: 
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredQuestions = questions.filter((q) =>
-    q.text.toLowerCase().includes(searchTerm.toLowerCase())
+    q.alternatives.some(alt => alt.text.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -51,12 +51,17 @@ export default function QuestionBank({ questions, onAddQuestion, selectedIds }: 
                     className="p-4 rounded-lg border border-primary/20 bg-background flex items-start justify-between gap-4"
                   >
                     <div className="flex-1 space-y-2">
-                        <p className="font-medium">{q.text}</p>
-                        {q.options && (
-                        <ol className="list-alpha list-inside text-sm text-muted-foreground">
-                            {q.options.map((opt, i) => <li key={i}>{opt}</li>)}
-                        </ol>
-                        )}
+                        {q.alternatives.map((alt, altIndex) => (
+                           <div key={altIndex}>
+                             {altIndex > 0 && <p className='font-bold my-1 text-sm'>অথবা</p>}
+                             <p className="font-medium">{alt.text}</p>
+                             {alt.options && (
+                               <ol className="list-alpha list-inside text-sm text-muted-foreground">
+                                   {alt.options.map((opt, i) => <li key={i}>{opt}</li>)}
+                               </ol>
+                             )}
+                           </div>
+                        ))}
                         <div className="flex items-center gap-2 text-xs">
                             <Badge variant="secondary">{q.type}</Badge>
                             <Badge variant="outline" className="border-amber-400/50 text-amber-400">{q.marks} নম্বর</Badge>

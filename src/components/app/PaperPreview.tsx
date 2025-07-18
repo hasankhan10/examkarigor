@@ -1,7 +1,7 @@
 
 'use client';
 
-import type { PaperConfig, Question } from '@/lib/types';
+import type { PaperConfig, Question, AiQuestion } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -9,7 +9,6 @@ import { Printer, Trash2, X, FileText } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import GeneratePaperDialog from './GeneratePaperDialog';
 
-type AiQuestion = Omit<Question, 'id' | 'class' | 'subject' | 'chapter'>;
 
 interface PaperPreviewProps {
   config: PaperConfig;
@@ -84,12 +83,17 @@ export default function PaperPreview({ config, questions, onRemoveQuestion, onRe
                               <div key={q.id} className="flex items-start gap-2 text-sm print-text-black p-2 rounded-lg mb-2">
                                 <span className="font-bold">{questionCounter}.</span>
                                 <div className="flex-1">
-                                  <p>{q.text}</p>
-                                  {q.options && (
-                                    <ol className="list-alpha list-inside grid grid-cols-2 gap-2 mt-2">
-                                      {q.options.map((opt, i) => <li key={i}>{opt}</li>)}
-                                    </ol>
-                                  )}
+                                  {q.alternatives.map((alt, altIndex) => (
+                                    <div key={altIndex}>
+                                      {altIndex > 0 && <p className='font-bold my-1'>অথবা</p>}
+                                      <p>{alt.text}</p>
+                                      {alt.options && (
+                                        <ol className="list-alpha list-inside grid grid-cols-2 gap-2 mt-2">
+                                          {alt.options.map((opt, i) => <li key={i}>{opt}</li>)}
+                                        </ol>
+                                      )}
+                                    </div>
+                                  ))}
                                 </div>
                                 <Badge variant="outline" className="print-text-black print-border">[{q.marks}]</Badge>
                                 <Button

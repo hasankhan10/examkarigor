@@ -12,13 +12,11 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { generateRandomPaper } from '@/ai/flows/generate-random-paper.ts';
-import type { PaperConfig, Question } from '@/lib/types';
+import type { PaperConfig, AiQuestion } from '@/lib/types';
 import { Loader2, Bot, Check, X } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { ScrollArea } from '../ui/scroll-area';
 import { Badge } from '../ui/badge';
-
-type AiQuestion = Omit<Question, 'id' | 'class' | 'subject' | 'chapter'>;
 
 interface GeneratePaperDialogProps {
   config: PaperConfig;
@@ -40,12 +38,17 @@ const FormattedPaper = ({ questions }: { questions: AiQuestion[] }) => {
         <div key={i} className="flex items-start gap-2 text-sm">
           <span className="font-bold">{i + 1}.</span>
           <div className="flex-1">
-            <p>{q.text}</p>
-            {q.options && (
-              <ol className="list-alpha list-inside grid grid-cols-2 gap-2 mt-2">
-                {q.options.map((opt, j) => <li key={j}>{opt}</li>)}
-              </ol>
-            )}
+            {q.alternatives.map((alt, altIndex) => (
+              <div key={altIndex}>
+                {altIndex > 0 && <p className='font-bold my-1'>অথবা</p>}
+                <p>{alt.text}</p>
+                {alt.options && (
+                  <ol className="list-alpha list-inside grid grid-cols-2 gap-2 mt-2">
+                    {alt.options.map((opt, j) => <li key={j}>{opt}</li>)}
+                  </ol>
+                )}
+              </div>
+            ))}
           </div>
           <Badge variant="outline">[{q.marks}]</Badge>
         </div>

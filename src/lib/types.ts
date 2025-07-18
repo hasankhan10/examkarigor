@@ -8,16 +8,22 @@ export type PaperConfig = {
   longQuestionCount: number;
 };
 
+export type SingleQuestion = {
+  text: string;
+  options?: string[];
+};
+
 export type Question = {
   id: number;
   class: string;
   subject: string;
   chapter: string;
   type: 'MCQ' | 'SAQ' | 'Long';
-  text: string;
-  options?: string[];
+  alternatives: SingleQuestion[];
   marks: number;
 };
+
+export type AiQuestion = Omit<Question, 'id' | 'class' | 'subject' | 'chapter'>;
 
 export type SubjectDetails = {
   [subject: string]: {

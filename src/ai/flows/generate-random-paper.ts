@@ -23,10 +23,14 @@ const GenerateRandomPaperInputSchema = z.object({
 
 export type GenerateRandomPaperInput = z.infer<typeof GenerateRandomPaperInputSchema>;
 
-const QuestionSchema = z.object({
-    type: z.enum(['MCQ', 'SAQ', 'Long']).describe('The type of question.'),
+const SingleQuestionSchema = z.object({
     text: z.string().describe('The question text.'),
     options: z.array(z.string()).optional().describe('A list of options for MCQ questions.'),
+});
+
+const QuestionSchema = z.object({
+    type: z.enum(['MCQ', 'SAQ', 'Long']).describe('The type of question.'),
+    alternatives: z.array(SingleQuestionSchema).describe('A list of alternative questions. Often just one, but can be more for "OR" questions.'),
     marks: z.number().describe('The marks for this question.'),
 });
 
@@ -59,11 +63,12 @@ Your primary goal is to generate the exact number of questions for each type as 
 - Number of Long Questions: {{{longQuestionCount}}}
 
 You MUST generate exactly {{{mcqCount}}} MCQ questions, {{{saqCount}}} SAQ questions, and {{{longQuestionCount}}} Long questions.
+For some questions, you can provide an alternative "OR" question by adding a second item to the 'alternatives' array for that question.
 
 The generated questions must be pertinent to the syllabus of WBBSE/WBCHSE board.
 All questions and instructions should be in Bengali by default, using Unicode for Bengali script.
 For MCQs, provide 4 distinct options.
-Distribute the marks among the questions so the sum is as close as possible to the total marks specified ({{{totalMarks}}}).
+Distribute the marks among the questions so the sum EXACTLY equals the total marks specified ({{{totalMarks}}}). This is a strict requirement.
 Return the output as a JSON object containing a list of questions.
 `,
 });
