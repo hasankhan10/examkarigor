@@ -7,9 +7,9 @@ import type { PricingPlan } from '@/components/ui/pricing';
 
 const plans: PricingPlan[] = [
   {
-    name: "বিনামূল্যে",
-    price: "0",
-    yearlyPrice: "0",
+    name: "Besic plan",
+    price: "99",
+    yearlyPrice: "79", // ~20% off 99
     period: "মাস",
     features: [
       "মাসে ৫টি প্রশ্নপত্র তৈরি",
