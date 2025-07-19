@@ -8,8 +8,8 @@ import type { PricingPlan } from '@/components/ui/pricing';
 const plans: PricingPlan[] = [
   {
     name: "বেসিক প্ল্যান",
-    price: "99",
-    yearlyPrice: "79", // ~20% off 99
+    price: "0",
+    yearlyPrice: "0",
     period: "মাস",
     features: [
       "মাসে ৫টি প্রশ্নপত্র তৈরি",
