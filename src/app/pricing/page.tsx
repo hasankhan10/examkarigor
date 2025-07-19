@@ -20,7 +20,7 @@ const plans = [
   },
   {
     name: "প্রো",
-    price: "₹499",
+    price: "₹199",
     pricePeriod: "/ মাস",
     description: "পেশাদার শিক্ষকদের জন্য",
     features: [
@@ -36,7 +36,7 @@ const plans = [
   {
     name: "প্রতিষ্ঠানের জন্য",
     price: "যোগাযোগ করুন",
-    description: "স্কুল এবং কোচিং সেন্টারের জন্য",
+    description: "স্কুল এবং কোচING সেন্টারের জন্য",
     features: [
       "প্রো প্ল্যানের সমস্ত সুবিধা",
       "একাধিক শিক্ষক অ্যাকাউন্ট",
