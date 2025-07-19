@@ -68,25 +68,32 @@ export function Pricing({
     }
   };
 
+  const getDiscountedMonthlyPrice = (plan: PricingPlan) => {
+      const priceNum = Number(plan.price);
+      if (isNaN(priceNum)) return plan.price;
+      return String(Math.round(priceNum * 0.75));
+  }
+
   const getPrice = (plan: PricingPlan) => {
-    return isMonthly ? plan.price : plan.yearlyPrice;
+    return isMonthly ? plan.price : getDiscountedMonthlyPrice(plan);
   };
   
   const getAnnualPrice = (plan: PricingPlan) => {
-    const yearlyPriceNum = Number(plan.yearlyPrice);
-    if (isNaN(yearlyPriceNum) || yearlyPriceNum === 0) {
+    const discountedMonthlyPrice = Number(getDiscountedMonthlyPrice(plan));
+    if (isNaN(discountedMonthlyPrice) || discountedMonthlyPrice === 0) {
       return null;
     }
-    return (Number(plan.price) * 12 * 0.75); // Assuming 25% discount now
+    return (discountedMonthlyPrice * 12);
   }
 
   const getPeriod = (plan: PricingPlan) => {
     return "মাস";
   }
 
-  const formatPrice = (price: string) => {
-    if (isNaN(Number(price))) return price;
-    return `₹${price}`;
+  const formatPrice = (price: string | number) => {
+    const numPrice = Number(price);
+    if (isNaN(numPrice)) return price;
+    return `₹${numPrice}`;
   };
 
   return (
@@ -167,7 +174,7 @@ export function Pricing({
                     )}
                   </div>
                    {!isMonthly && getAnnualPrice(plan) && (
-                      <p className="text-sm text-muted-foreground mt-1">বার্ষিক বিল {formatPrice(String(getAnnualPrice(plan)))}</p>
+                      <p className="text-sm text-muted-foreground mt-1">বার্ষিক বিল {formatPrice(getAnnualPrice(plan) || 0)}</p>
                     )}
                 </div>
 
