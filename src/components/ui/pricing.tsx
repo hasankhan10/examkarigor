@@ -72,6 +72,11 @@ export function Pricing({
     return isMonthly ? plan.price : plan.yearlyPrice;
   };
 
+  const getPeriod = (plan: PricingPlan) => {
+    if (plan.period === "যোগাযোগ") return plan.period;
+    return isMonthly ? "মাস" : "বছর";
+  }
+
   const formatPrice = (price: string) => {
     if (isNaN(Number(price))) return price;
     return `₹${price}`;
@@ -105,79 +110,79 @@ export function Pricing({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center">
         {plans.map((plan, index) => (
-          <motion.div
-            key={index}
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={
-              isDesktop
-                ? { y: 0, opacity: 1 }
-                : { y: plan.isPopular ? -20 : 0, opacity: 1 }
-            }
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.5,
-              type: "spring",
-              stiffness: 100,
-              damping: 20,
-              delay: 0.2 + index * 0.1,
-            }}
-            className={cn(
-              `rounded-2xl p-6 text-center lg:flex lg:flex-col lg:justify-center relative border`,
-              plan.isPopular ? "border-amber-500 border-2 shadow-amber-500/10 shadow-lg" : "border-primary/20",
-              "flex flex-col",
-               plan.isPopular ? "lg:scale-110" : "lg:scale-100"
-            )}
-          >
+          <div key={index} className={cn("relative", plan.isPopular && "lg:scale-110")}>
             {plan.isPopular && (
-              <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2">
+              <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 z-10">
                   <div className="flex items-center gap-2 px-4 py-1.5 bg-amber-500/10 border border-amber-500 rounded-full">
                     <Star className="text-amber-500 h-4 w-4 fill-amber-500" />
                     <span className="text-amber-400 text-sm font-semibold">সবচেয়ে জনপ্রিয়</span>
                   </div>
               </div>
             )}
-            <div className="flex-1 flex flex-col pt-4">
-              <p className="text-lg font-headline font-semibold text-amber-400">
-                {plan.name}
-              </p>
-              <div className="mt-4 flex items-baseline justify-center gap-x-1">
-                <span className="text-5xl font-bold tracking-tight text-foreground">
-                  {formatPrice(getPrice(plan))}
-                </span>
-                {plan.period !== "যোগাযোগ" && (
-                  <span className="text-sm font-semibold leading-6 tracking-wide text-muted-foreground">
-                    / {plan.period}
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={
+                isDesktop
+                  ? { y: 0, opacity: 1 }
+                  : { y: plan.isPopular ? -20 : 0, opacity: 1 }
+              }
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.5,
+                type: "spring",
+                stiffness: 100,
+                damping: 20,
+                delay: 0.2 + index * 0.1,
+              }}
+              className={cn(
+                `rounded-2xl p-6 text-center lg:flex lg:flex-col lg:justify-center relative border`,
+                plan.isPopular ? "border-amber-500 border-2 shadow-amber-500/10 shadow-lg" : "border-primary/20",
+                "flex flex-col"
+              )}
+            >
+              <div className="flex-1 flex flex-col pt-4">
+                <p className="text-lg font-headline font-semibold text-amber-400">
+                  {plan.name}
+                </p>
+                <div className="mt-4 flex items-baseline justify-center gap-x-1">
+                  <span className="text-5xl font-bold tracking-tight text-foreground">
+                    {formatPrice(getPrice(plan))}
                   </span>
-                )}
-              </div>
-              
-              <ul className="mt-8 gap-3 flex flex-col">
-                {plan.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-center justify-center gap-2">
-                    <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
-                    <span className="text-muted-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+                  {plan.period !== "যোগাযোগ" && (
+                    <span className="text-sm font-semibold leading-6 tracking-wide text-muted-foreground">
+                      / {getPeriod(plan)}
+                    </span>
+                  )}
+                </div>
+                
+                <ul className="mt-8 gap-3 flex flex-col">
+                  {plan.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-center justify-center gap-2">
+                      <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
+                      <span className="text-muted-foreground">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
 
-              <p className="mt-6 text-xs leading-5 text-muted-foreground">
-                {plan.description}
-              </p>
-            </div>
-            <Link
-                href={plan.href}
-                className={cn(
-                  buttonVariants({
-                     variant: plan.isPopular ? "default" : "outline",
-                     size: "lg"
-                  }),
-                  "mt-8 w-full",
-                  plan.isPopular && "bg-amber-500 text-accent-foreground hover:bg-amber-600"
-                )}
-              >
-                {plan.buttonText}
-              </Link>
-          </motion.div>
+                <p className="mt-6 text-xs leading-5 text-muted-foreground">
+                  {plan.description}
+                </p>
+              </div>
+              <Link
+                  href={plan.href}
+                  className={cn(
+                    buttonVariants({
+                      variant: plan.isPopular ? "default" : "outline",
+                      size: "lg"
+                    }),
+                    "mt-8 w-full",
+                    plan.isPopular && "bg-amber-500 text-accent-foreground hover:bg-amber-600"
+                  )}
+                >
+                  {plan.buttonText}
+                </Link>
+            </motion.div>
+          </div>
         ))}
       </div>
     </div>
