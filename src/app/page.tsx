@@ -17,9 +17,14 @@ export default function LandingPage() {
           <Link href="/" className="text-xl md:text-2xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">
             EXAM কারিগর
           </Link>
-          <Button asChild variant="ghost">
-            <Link href="/dashboard">লগইন করুন</Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button asChild variant="ghost">
+              <Link href="/pricing">মূল্য</Link>
+            </Button>
+            <Button asChild variant="ghost">
+              <Link href="/dashboard">লগইন করুন</Link>
+            </Button>
+          </div>
         </div>
       </header>
 
