@@ -93,7 +93,7 @@ export function Pricing({
         </p>
       </div>
 
-      <div className="flex justify-center items-center mb-10">
+      <div className="flex justify-center items-center mb-16">
         <span className="mr-2 font-semibold">মাসিক বিল</span>
         <Label>
             <Switch
