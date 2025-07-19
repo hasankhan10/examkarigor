@@ -111,14 +111,6 @@ export function Pricing({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center">
         {plans.map((plan, index) => (
           <div key={index} className="relative">
-             {plan.isPopular && (
-              <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 z-10">
-                  <div className="flex items-center gap-2 px-4 py-1.5 bg-amber-500/10 border border-amber-500 rounded-full">
-                    <Star className="text-amber-500 h-4 w-4 fill-amber-500" />
-                    <span className="text-amber-400 text-sm font-semibold">সবচেয়ে জনপ্রিয়</span>
-                  </div>
-              </div>
-            )}
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={
@@ -140,6 +132,14 @@ export function Pricing({
                 "flex flex-col"
               )}
             >
+              {plan.isPopular && (
+              <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 z-20">
+                  <div className="flex items-center gap-2 px-4 py-1.5 bg-amber-500/10 border border-amber-500 rounded-full">
+                    <Star className="text-amber-500 h-4 w-4 fill-amber-500" />
+                    <span className="text-amber-400 text-sm font-semibold">সবচেয়ে জনপ্রিয়</span>
+                  </div>
+              </div>
+              )}
               <div className="flex-1 flex flex-col pt-4">
                 <p className="text-lg font-headline font-semibold text-amber-400">
                   {plan.name}
