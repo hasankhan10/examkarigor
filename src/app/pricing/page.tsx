@@ -24,8 +24,8 @@ const plans: PricingPlan[] = [
   },
   {
     name: "প্রো",
-    price: "199",
-    yearlyPrice: "159", // ~20% off 199
+    price: "149",
+    yearlyPrice: "119", // ~20% off 149
     period: "মাস",
     features: [
       "সীমাহীন প্রশ্নপত্র তৈরি",
