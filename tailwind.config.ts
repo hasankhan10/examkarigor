@@ -19,6 +19,7 @@ export default {
       fontFamily: {
         body: ['Noto Serif Bengali', 'serif'],
         headline: ['Playfair Display', 'serif'],
+        display: ['Hind Siliguri', 'sans-serif'],
         code: ['Source Code Pro', 'monospace'],
       },
       colors: {
