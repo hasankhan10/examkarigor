@@ -74,10 +74,10 @@ export function Pricing({
   
   const getAnnualPrice = (plan: PricingPlan) => {
     const yearlyPriceNum = Number(plan.yearlyPrice);
-    if (isNaN(yearlyPriceNum)) {
+    if (isNaN(yearlyPriceNum) || yearlyPriceNum === 0) {
       return null;
     }
-    return (yearlyPriceNum * 12);
+    return (Number(plan.price) * 12 * 0.75); // Assuming 25% discount now
   }
 
   const getPeriod = (plan: PricingPlan) => {
@@ -111,13 +111,13 @@ export function Pricing({
             />
         </Label>
         <span className="font-semibold">
-          বার্ষিক বিল <span className="text-amber-500">(২০% ছাড়)</span>
+          বার্ষিক বিল <span className="text-amber-500">(২৫% ছাড়)</span>
         </span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
         {plans.map((plan, index) => (
-          <div key={index} className={cn("relative", plan.isPopular ? "md:-translate-y-4" : "")}>
+          <div key={index} className="relative h-full">
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={{
