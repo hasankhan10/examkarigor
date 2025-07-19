@@ -69,19 +69,19 @@ export function Pricing({
   };
 
   const getPrice = (plan: PricingPlan) => {
-    if (isMonthly) {
-      return plan.price;
-    }
+    return isMonthly ? plan.price : plan.yearlyPrice;
+  };
+  
+  const getAnnualPrice = (plan: PricingPlan) => {
     const yearlyPriceNum = Number(plan.yearlyPrice);
     if (isNaN(yearlyPriceNum)) {
-      return plan.yearlyPrice; // For "Custom"
+      return null;
     }
-    return (yearlyPriceNum * 12).toString();
-  };
+    return (yearlyPriceNum * 12);
+  }
 
   const getPeriod = (plan: PricingPlan) => {
-    if (plan.period === "যোগাযোগ") return plan.period;
-    return isMonthly ? "মাস" : "বছর";
+    return plan.period === "যোগাযোগ" ? plan.period : "মাস";
   }
 
   const formatPrice = (price: string) => {
@@ -152,16 +152,22 @@ export function Pricing({
                 <p className="text-lg font-headline font-semibold text-amber-400">
                   {plan.name}
                 </p>
-                <div className="mt-4 flex items-baseline justify-center gap-x-1">
-                  <span className="text-5xl font-bold tracking-tight text-foreground">
-                    {formatPrice(getPrice(plan))}
-                  </span>
-                  {plan.price !== "0" && plan.period !== "যোগাযোগ" && (
-                    <span className="text-sm font-semibold leading-6 tracking-wide text-muted-foreground">
-                      / {getPeriod(plan)}
+                <div className="mt-4">
+                  <div className="flex items-baseline justify-center gap-x-1">
+                    <span className="text-5xl font-bold tracking-tight text-foreground">
+                      {formatPrice(getPrice(plan))}
                     </span>
-                  )}
+                    {plan.price !== "0" && plan.period !== "যোগাযোগ" && (
+                      <span className="text-sm font-semibold leading-6 tracking-wide text-muted-foreground">
+                        / {getPeriod(plan)}
+                      </span>
+                    )}
+                  </div>
+                   {!isMonthly && getAnnualPrice(plan) && (
+                      <p className="text-xs text-muted-foreground mt-1">বার্ষিক বিল {formatPrice(String(getAnnualPrice(plan)))}</p>
+                    )}
                 </div>
+
 
                 <ul className="mt-8 gap-3 flex flex-col">
                   {plan.features.map((feature, idx) => (
