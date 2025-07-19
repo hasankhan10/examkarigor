@@ -81,7 +81,7 @@ export function Pricing({
   }
 
   const getPeriod = (plan: PricingPlan) => {
-    return plan.period === "যোগাযোগ" ? plan.period : "মাস";
+    return "মাস";
   }
 
   const formatPrice = (price: string) => {
@@ -118,6 +118,14 @@ export function Pricing({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
         {plans.map((plan, index) => (
           <div key={index} className={cn("relative", plan.isPopular ? "md:-translate-y-4" : "")}>
+            {plan.isPopular && (
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 py-1 px-3 rounded-full flex items-center gap-1 z-10">
+                <Star className="text-background h-4 w-4 fill-current" />
+                <span className="text-background text-sm font-semibold">
+                  সবচেয়ে জনপ্রিয়
+                </span>
+              </div>
+            )}
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={{
@@ -140,14 +148,7 @@ export function Pricing({
                 "flex flex-col h-full"
               )}
             >
-              {plan.isPopular && (
-                <div className="absolute top-0 right-0 bg-amber-500 py-1 px-3 rounded-bl-xl rounded-tr-xl flex items-center gap-1">
-                  <Star className="text-background h-4 w-4 fill-current" />
-                  <span className="text-background text-sm font-semibold">
-                    সবচেয়ে জনপ্রিয়
-                  </span>
-                </div>
-              )}
+              
               <div className="flex-1 flex flex-col pt-4">
                 <p className="text-lg font-headline font-semibold text-amber-400">
                   {plan.name}
@@ -164,7 +165,7 @@ export function Pricing({
                     )}
                   </div>
                    {!isMonthly && getAnnualPrice(plan) && (
-                      <p className="text-xs text-muted-foreground mt-1">বার্ষিক বিল {formatPrice(String(getAnnualPrice(plan)))}</p>
+                      <p className="text-sm text-muted-foreground mt-1">বার্ষিক বিল {formatPrice(String(getAnnualPrice(plan)))}</p>
                     )}
                 </div>
 
