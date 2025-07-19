@@ -2,10 +2,12 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { Spotlight } from '@/components/ui/spotlight-cursor';
 
 export default function LandingPage() {
   return (
     <div className="relative flex flex-col min-h-screen bg-background text-foreground overflow-hidden">
+      <Spotlight config={{ color: '#FFD700', brightness: 0.1 }} />
       <div className="absolute inset-0 z-0 opacity-10">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-transparent to-background"></div>
         <div className="absolute bottom-0 left-0 h-1/2 w-1/2 rounded-full bg-amber-500/10 blur-3xl"></div>
