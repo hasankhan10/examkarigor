@@ -76,6 +76,10 @@ function GeneratePatternComponent() {
            (config.fillInBlanks.enabled ? (config.fillInBlanks.count * config.fillInBlanks.marks) : 0);
   }, [config]);
 
+  const atLeastOneQuestionTypeEnabled = useMemo(() => {
+    return config.mcq.enabled || config.saq.enabled || config.long.enabled || config.trueFalse.enabled || config.fillInBlanks.enabled;
+  }, [config]);
+
   const handleSelectChange = (name: 'class' | 'subject' | 'chapter') => (value: string) => {
     setConfig(prevConfig => {
         const newConfig = { ...prevConfig, [name]: value };
@@ -358,7 +362,12 @@ function GeneratePatternComponent() {
                     </div>
                 </CardContent>
                 <CardFooter className="flex justify-end">
-                    <Button onClick={handleSubmit} size="lg" className="bg-amber-500 text-accent-foreground hover:bg-amber-600">
+                    <Button 
+                        onClick={handleSubmit} 
+                        size="lg" 
+                        className="bg-amber-500 text-accent-foreground hover:bg-amber-600"
+                        disabled={!atLeastOneQuestionTypeEnabled}
+                    >
                         পরবর্তী ধাপ
                         <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
@@ -376,5 +385,7 @@ export default function GeneratePatternPage() {
         </Suspense>
     )
 }
+
+    
 
     
