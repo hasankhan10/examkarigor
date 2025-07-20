@@ -33,7 +33,7 @@ function DashboardComponent() {
         time: params.time || initialConfig.time,
         class: params.class || initialConfig.class,
         subject: params.subject || initialConfig.subject,
-        chapter: params.chapter || initialConfig.chapter,
+        chapter: params.chapter ? params.chapter.split(',') : initialConfig.chapter,
         mcq: {
           enabled: params['mcq.enabled'] === 'true',
           count: Number(params['mcq.count']) || initialConfig.mcq.count,
@@ -85,7 +85,7 @@ function DashboardComponent() {
       (q) =>
         q.subject === config.subject &&
         q.class === config.class &&
-        (config.chapter === 'all' || q.chapter === config.chapter)
+        (config.chapter.length === 0 || config.chapter.includes(q.chapter))
     );
   }, [config.subject, config.class, config.chapter]);
   
@@ -96,7 +96,7 @@ function DashboardComponent() {
         time: config.time,
         class: config.class,
         subject: config.subject,
-        chapter: config.chapter,
+        chapter: config.chapter.join(','),
         'mcq.enabled': String(config.mcq.enabled),
         'mcq.count': String(config.mcq.count),
         'mcq.marks': String(config.mcq.marks),
@@ -151,7 +151,7 @@ function DashboardComponent() {
       id: Date.now() + index, // Create a unique ID
       class: config.class,
       subject: config.subject,
-      chapter: config.chapter,
+      chapter: "AI Generated", // This can be a single string
     }));
     setSelectedQuestions(prev => sortQuestions([...prev, ...newQuestions]));
   };

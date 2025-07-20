@@ -7,7 +7,7 @@ export const initialConfig: PaperConfig = {
   time: '',
   class: '10',
   subject: 'গণিত',
-  chapter: 'all',
+  chapter: [],
   mcq: { enabled: false, count: 0, marks: 0 },
   saq: { enabled: false, count: 0, marks: 0 },
   long: { enabled: false, count: 0, marks: 0 },

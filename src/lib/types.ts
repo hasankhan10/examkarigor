@@ -13,7 +13,7 @@ export type PaperConfig = {
   time: string;
   class: string;
   subject: string;
-  chapter: string;
+  chapter: string[];
   mcq: QuestionTypeDetail;
   saq: QuestionTypeDetail;
   long: QuestionTypeDetail;

@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import Header from '@/components/app/Header';
 import { initialConfig } from '@/lib/mock-data';
 import { useLanguage } from '@/hooks/use-language';
+import { MultiSelect } from '@/components/ui/multi-select';
 
 function GeneratePatternComponent() {
   const [config, setConfig] = useState<PaperConfig>(initialConfig);
@@ -32,7 +33,7 @@ function GeneratePatternComponent() {
         newConfig.time = params.time || initialConfig.time;
         newConfig.class = params.class || initialConfig.class;
         newConfig.subject = params.subject || initialConfig.subject;
-        newConfig.chapter = params.chapter || initialConfig.chapter;
+        newConfig.chapter = params.chapter ? params.chapter.split(',') : initialConfig.chapter;
         
         newConfig.mcq.enabled = params['mcq.enabled'] === 'true';
         newConfig.mcq.count = Number(params['mcq.count']) || initialConfig.mcq.count;
@@ -66,8 +67,8 @@ function GeneratePatternComponent() {
 
         // Ensure chapter is valid
         const availableChaptersForSubject = subjectDetails[newConfig.subject]?.chapters[newConfig.class] || [];
-        if (!availableChaptersForSubject.includes(newConfig.chapter) && newConfig.chapter !== 'all') {
-            newConfig.chapter = 'all';
+        if (!newConfig.chapter.every(c => availableChaptersForSubject.includes(c))) {
+            newConfig.chapter = [];
         }
         
         setConfig(newConfig);
@@ -87,22 +88,26 @@ function GeneratePatternComponent() {
     return config.mcq.enabled || config.saq.enabled || config.long.enabled || config.trueFalse.enabled || config.fillInBlanks.enabled || config.rochonadhormi.enabled;
   }, [config]);
 
-  const handleSelectChange = (name: 'class' | 'subject' | 'chapter') => (value: string) => {
+  const handleSelectChange = (name: 'class' | 'subject') => (value: string) => {
     setConfig(prevConfig => {
         const newConfig = { ...prevConfig, [name]: value };
 
         if (name === 'class') {
             const firstSubjectForClass = Object.keys(subjectDetails).find(sub => subjectDetails[sub].classes.includes(value)) || '';
             newConfig.subject = firstSubjectForClass;
-            newConfig.chapter = 'all';
+            newConfig.chapter = [];
         } else if (name === 'subject') {
-            newConfig.chapter = 'all';
+            newConfig.chapter = [];
         }
 
         return newConfig;
     });
   };
   
+  const handleChapterChange = (chapters: string[]) => {
+      setConfig(prev => ({...prev, chapter: chapters}));
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setConfig(prev => ({ ...prev, [name]: value }));
@@ -140,7 +145,7 @@ function GeneratePatternComponent() {
         time: config.time,
         class: config.class,
         subject: config.subject,
-        chapter: config.chapter,
+        chapter: config.chapter.join(','),
         'mcq.enabled': String(config.mcq.enabled),
         'mcq.count': String(config.mcq.count),
         'mcq.marks': String(config.mcq.marks),
@@ -165,6 +170,7 @@ function GeneratePatternComponent() {
 
   const availableSubjects = Object.keys(subjectDetails).filter(sub => subjectDetails[sub].classes.includes(config.class));
   const availableChapters = subjectDetails[config.subject]?.chapters[config.class] || [];
+  const chapterOptions = availableChapters.map(chap => ({ value: chap, label: chap }));
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -232,15 +238,13 @@ function GeneratePatternComponent() {
 
                     <div className="space-y-2">
                         <Label htmlFor="chapter">{t('chapter')}</Label>
-                        <Select name="chapter" value={config.chapter} onValueChange={handleSelectChange('chapter')} disabled={!config.subject || availableChapters.length === 0}>
-                            <SelectTrigger id="chapter"><SelectValue /></SelectTrigger>
-                            <SelectContent>
-                            <SelectItem value="all">{t('all_chapters')}</SelectItem>
-                            {availableChapters.map((chap) => (
-                                <SelectItem key={chap} value={chap}>{chap}</SelectItem>
-                            ))}
-                            </SelectContent>
-                        </Select>
+                         <MultiSelect
+                            options={chapterOptions}
+                            selected={config.chapter}
+                            onChange={(value) => setConfig(prev => ({...prev, chapter: value}))}
+                            disabled={!config.subject || availableChapters.length === 0}
+                            placeholder={t('select_chapters')}
+                         />
                     </div>
 
                     <div className="space-y-4">

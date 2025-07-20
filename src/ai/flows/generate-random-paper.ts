@@ -20,7 +20,7 @@ const QuestionTypeDetailSchema = z.object({
 const GenerateRandomPaperInputSchema = z.object({
   class: z.string().describe('The class for which to generate the exam paper (e.g., 5-12).'),
   subject: z.string().describe('The subject for which to generate the exam paper (e.g., Bengali, Math, Science).'),
-  chapter: z.string().describe('The chapter for which to generate the exam paper (e.g., specific topics within the subject).'),
+  chapter: z.array(z.string()).describe('The chapters for which to generate the exam paper (e.g., specific topics within the subject).'),
   difficulty: z.number().min(0).max(100).describe('The difficulty level of the questions on a scale of 0 to 100, where 0 is easiest and 100 is hardest. This is a crucial parameter.'),
   language: z.string().describe('The language for the exam paper (e.g., "Bengali", "English"). This dictates the language of the generated questions.'),
   mcq: QuestionTypeDetailSchema.describe('Details for Multiple Choice Questions.'),
@@ -66,7 +66,7 @@ You will generate a random exam paper based on the following criteria:
 
 Class: {{{class}}}
 Subject: {{{subject}}}
-Chapter: {{{chapter}}}
+Chapters: {{#each chapter}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 Difficulty Level (0-100): {{{difficulty}}}
 
 Your primary goal is to generate the exact number of questions for each type as specified below, with the specified marks for each question.
