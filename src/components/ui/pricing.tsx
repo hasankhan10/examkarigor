@@ -140,7 +140,7 @@ export function Pricing({
                 delay: 0.2 + index * 0.1,
               }}
               className={cn(
-                `rounded-2xl p-6 text-center lg:flex lg:flex-col lg:justify-center relative border overflow-hidden`,
+                `rounded-2xl p-6 text-center lg:flex lg:flex-col lg:justify-center relative border`,
                 plan.isPopular
                   ? "border-amber-500 border-2 shadow-amber-500/10 shadow-lg"
                   : "border-primary/20",
@@ -148,13 +148,9 @@ export function Pricing({
               )}
             >
               {plan.isPopular && (
-                <div className="absolute top-0 right-0">
-                  <div className="absolute top-[18px] right-[-34px] w-[120px] transform rotate-45 bg-amber-500 py-1 px-3 text-center flex items-center justify-center gap-1 z-10">
-                    <Star className="text-background h-4 w-4 fill-current" />
-                    <span className="text-background text-sm font-semibold">
-                      সবচেয়ে জনপ্রিয়
-                    </span>
-                  </div>
+                <div className="absolute top-4 right-4 bg-amber-500 text-background text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
+                  <Star className="h-3 w-3 fill-current" />
+                  সবচেয়ে জনপ্রিয়
                 </div>
               )}
               
