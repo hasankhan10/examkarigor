@@ -79,7 +79,6 @@ export default function PricingPage() {
       <main className="flex-1">
         <Pricing 
             plans={plans}
-            title="আপনার জন্য সঠিক প্ল্যান"
             description={`আমাদের সহজ এবং স্বচ্ছ মূল্য পরিকল্পনা থেকে বেছে নিন।\nকোনো লুকানো চার্জ নেই।`}
         />
       </main>
@@ -92,3 +91,5 @@ export default function PricingPage() {
     </div>
   );
 }
+
+    
