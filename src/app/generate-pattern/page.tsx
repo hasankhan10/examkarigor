@@ -150,16 +150,16 @@ function GeneratePatternComponent() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="schoolName">স্কুলের নাম</Label>
-                            <Input id="schoolName" name="schoolName" value={config.schoolName} onChange={handleInputChange} />
+                            <Input id="schoolName" name="schoolName" value={config.schoolName} onChange={handleInputChange} placeholder="আপনার স্কুলের নাম লিখুন" />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="examTerm">পরীক্ষার পর্ব</Label>
-                            <Input id="examTerm" name="examTerm" value={config.examTerm} onChange={handleInputChange} />
+                            <Input id="examTerm" name="examTerm" value={config.examTerm} onChange={handleInputChange} placeholder="বার্ষিক পরীক্ষা" />
                         </div>
                     </div>
                      <div className="space-y-2">
                             <Label htmlFor="time">সময়</Label>
-                            <Input id="time" name="time" value={config.time} onChange={handleInputChange} />
+                            <Input id="time" name="time" value={config.time} onChange={handleInputChange} placeholder="৩ ঘন্টা ১৫ মিনিট" />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -2,9 +2,9 @@
 import type { PaperConfig, Question, SubjectDetails } from './types';
 
 export const initialConfig: PaperConfig = {
-  schoolName: 'School Name',
-  examTerm: 'Annual Examination',
-  time: '3 Hours 15 Minutes',
+  schoolName: '',
+  examTerm: '',
+  time: '',
   class: '10',
   subject: 'গণিত',
   chapter: 'all',
