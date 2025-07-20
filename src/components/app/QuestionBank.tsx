@@ -9,6 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { BookOpen, PlusCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
+import { useLanguage } from '@/hooks/use-language';
 
 interface QuestionBankProps {
   questions: Question[];
@@ -18,6 +19,7 @@ interface QuestionBankProps {
 
 export default function QuestionBank({ questions, onAddQuestion, selectedIds }: QuestionBankProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const { t, lang } = useLanguage();
 
   const filteredQuestions = questions.filter((q) =>
     q.alternatives.some(alt => alt.text.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -29,14 +31,14 @@ export default function QuestionBank({ questions, onAddQuestion, selectedIds }: 
          <div className="flex items-center gap-4">
           <BookOpen className="w-8 h-8 text-amber-400" />
           <div>
-            <CardTitle className="font-headline text-2xl text-amber-400">প্রশ্ন ভান্ডার</CardTitle>
-            <CardDescription>এখান থেকে প্রশ্ন নির্বাচন করে যোগ করুন</CardDescription>
+            <CardTitle className="font-headline text-2xl text-amber-400">{t('question_bank_title')}</CardTitle>
+            <CardDescription>{t('question_bank_desc')}</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <Input
-          placeholder="প্রশ্ন খুঁজুন..."
+          placeholder={t('search_questions_placeholder')}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -53,7 +55,7 @@ export default function QuestionBank({ questions, onAddQuestion, selectedIds }: 
                     <div className="flex-1 space-y-2">
                         {q.alternatives.map((alt, altIndex) => (
                            <div key={altIndex}>
-                             {altIndex > 0 && <p className='font-bold my-1 text-sm'>অথবা</p>}
+                             {altIndex > 0 && <p className='font-bold my-1 text-sm'>{t('or')}</p>}
                              <p className="font-medium">{alt.text}</p>
                              {alt.options && (
                                <ol className="list-alpha list-inside text-sm text-muted-foreground">
@@ -64,7 +66,7 @@ export default function QuestionBank({ questions, onAddQuestion, selectedIds }: 
                         ))}
                         <div className="flex items-center gap-2 text-xs">
                             <Badge variant="secondary">{q.type}</Badge>
-                            <Badge variant="outline" className="border-amber-400/50 text-amber-400">{q.marks} নম্বর</Badge>
+                            <Badge variant="outline" className="border-amber-400/50 text-amber-400">{t('marks_badge', { marks: q.marks })}</Badge>
                         </div>
                     </div>
                     <Button
@@ -82,8 +84,8 @@ export default function QuestionBank({ questions, onAddQuestion, selectedIds }: 
               })
             ) : (
               <div className="text-center text-muted-foreground py-16">
-                <p>কোনো প্রশ্ন পাওয়া যায়নি।</p>
-                <p className="text-sm">অনুগ্রহ করে আপনার শ্রেণী বা বিষয় পরিবর্তন করে দেখুন।</p>
+                <p>{t('no_questions_found')}</p>
+                <p className="text-sm">{t('try_changing_class_subject')}</p>
               </div>
             )}
           </div>

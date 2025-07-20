@@ -15,11 +15,13 @@ import { FileSignature, Info, ArrowRight, Sigma } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/app/Header';
 import { initialConfig } from '@/lib/mock-data';
+import { useLanguage } from '@/hooks/use-language';
 
 function GeneratePatternComponent() {
   const [config, setConfig] = useState<PaperConfig>(initialConfig);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t, lang } = useLanguage(config.subject);
 
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
@@ -174,14 +176,14 @@ function GeneratePatternComponent() {
                         <div className="flex items-center gap-4">
                             <FileSignature className="w-8 h-8 text-amber-400" />
                             <div>
-                                <CardTitle className="font-headline text-2xl text-amber-400">পত্র কাঠামো</CardTitle>
-                                <CardDescription>আপনার পরীক্ষার প্রশ্নপত্রের কাঠামো সেট করুন</CardDescription>
+                                <CardTitle className="font-headline text-2xl text-amber-400">{t('paper_structure_title')}</CardTitle>
+                                <CardDescription>{t('paper_structure_desc')}</CardDescription>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 text-right self-end sm:self-center">
                            <Sigma className="w-6 h-6 text-amber-400" />
                            <div>
-                            <p className='text-xs text-muted-foreground'>মোট নম্বর</p>
+                            <p className='text-xs text-muted-foreground'>{t('total_marks')}</p>
                             <p className='font-bold text-2xl text-amber-400'>{totalMarks}</p>
                            </div>
                         </div>
@@ -190,22 +192,22 @@ function GeneratePatternComponent() {
                 <CardContent className="grid gap-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="schoolName">স্কুলের নাম</Label>
-                            <Input id="schoolName" name="schoolName" value={config.schoolName} onChange={handleInputChange} placeholder="আপনার স্কুলের নাম লিখুন" />
+                            <Label htmlFor="schoolName">{t('school_name')}</Label>
+                            <Input id="schoolName" name="schoolName" value={config.schoolName} onChange={handleInputChange} placeholder={t('school_name_placeholder')} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="examTerm">পরীক্ষার পর্ব</Label>
-                            <Input id="examTerm" name="examTerm" value={config.examTerm} onChange={handleInputChange} placeholder="বার্ষিক পরীক্ষা" />
+                            <Label htmlFor="examTerm">{t('exam_term')}</Label>
+                            <Input id="examTerm" name="examTerm" value={config.examTerm} onChange={handleInputChange} placeholder={t('exam_term_placeholder')} />
                         </div>
                     </div>
                      <div className="space-y-2">
-                            <Label htmlFor="time">সময়</Label>
-                            <Input id="time" name="time" value={config.time} onChange={handleInputChange} placeholder="৩ ঘন্টা ১৫ মিনিট" />
+                            <Label htmlFor="time">{t('time')}</Label>
+                            <Input id="time" name="time" value={config.time} onChange={handleInputChange} placeholder={t('time_placeholder')} />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="class">শ্রেণী</Label>
+                            <Label htmlFor="class">{t('class')}</Label>
                             <Select name="class" value={config.class} onValueChange={handleSelectChange('class')}>
                                 <SelectTrigger id="class"><SelectValue /></SelectTrigger>
                                 <SelectContent>
@@ -216,24 +218,24 @@ function GeneratePatternComponent() {
                             </Select>
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="subject">বিষয়</Label>
+                            <Label htmlFor="subject">{t('subject')}</Label>
                             <Select name="subject" value={config.subject} onValueChange={handleSelectChange('subject')} disabled={!config.class || availableSubjects.length === 0}>
                                 <SelectTrigger id="subject"><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                 {availableSubjects.length > 0 ? availableSubjects.map((sub) => (
                                     <SelectItem key={sub} value={sub}>{sub}</SelectItem>
-                                )) : <SelectItem value="" disabled>এই শ্রেণীর জন্য কোনো বিষয় নেই</SelectItem>}
+                                )) : <SelectItem value="" disabled>{t('no_subjects_for_class')}</SelectItem>}
                                 </SelectContent>
                             </Select>
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="chapter">অধ্যায়</Label>
+                        <Label htmlFor="chapter">{t('chapter')}</Label>
                         <Select name="chapter" value={config.chapter} onValueChange={handleSelectChange('chapter')} disabled={!config.subject || availableChapters.length === 0}>
                             <SelectTrigger id="chapter"><SelectValue /></SelectTrigger>
                             <SelectContent>
-                            <SelectItem value="all">সমস্ত অধ্যায়</SelectItem>
+                            <SelectItem value="all">{t('all_chapters')}</SelectItem>
                             {availableChapters.map((chap) => (
                                 <SelectItem key={chap} value={chap}>{chap}</SelectItem>
                             ))}
@@ -245,11 +247,11 @@ function GeneratePatternComponent() {
                         <div className='p-4 border rounded-lg'>
                            <div className="flex items-center justify-between mb-2">
                                 <Label className="flex items-center gap-1 text-base">
-                                    MCQ
+                                    {t('mcq_long')}
                                     <TooltipProvider>
                                         <Tooltip>
                                         <TooltipTrigger asChild><Info className="w-3 h-3 cursor-help" /></TooltipTrigger>
-                                        <TooltipContent><p>Multiple Choice Questions</p></TooltipContent>
+                                        <TooltipContent><p>{t('mcq_tooltip')}</p></TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
                                 </Label>
@@ -257,11 +259,11 @@ function GeneratePatternComponent() {
                            </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="mcqCount">সংখ্যা</Label>
+                                    <Label htmlFor="mcqCount">{t('count')}</Label>
                                     <Input type="number" id="mcqCount" value={config.mcq.count} onChange={handleQuestionConfigChange('mcq', 'count')} disabled={!config.mcq.enabled} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="mcqMarks">প্রতি প্রশ্নের নম্বর</Label>
+                                    <Label htmlFor="mcqMarks">{t('marks_per_question')}</Label>
                                     <Input type="number" id="mcqMarks" value={config.mcq.marks} onChange={handleQuestionConfigChange('mcq', 'marks')} disabled={!config.mcq.enabled} />
                                 </div>
                             </div>
@@ -270,11 +272,11 @@ function GeneratePatternComponent() {
                         <div className='p-4 border rounded-lg'>
                            <div className="flex items-center justify-between mb-2">
                                <Label className="flex items-center gap-1 text-base">
-                                    SAQ
+                                    {t('saq_long')}
                                     <TooltipProvider>
                                         <Tooltip>
                                         <TooltipTrigger asChild><Info className="w-3 h-3 cursor-help" /></TooltipTrigger>
-                                        <TooltipContent><p>Short Answer Questions</p></TooltipContent>
+                                        <TooltipContent><p>{t('saq_tooltip')}</p></TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
                                 </Label>
@@ -282,11 +284,11 @@ function GeneratePatternComponent() {
                            </div>
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="saqCount">সংখ্যা</Label>
+                                    <Label htmlFor="saqCount">{t('count')}</Label>
                                     <Input type="number" id="saqCount" value={config.saq.count} onChange={handleQuestionConfigChange('saq', 'count')} disabled={!config.saq.enabled} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="saqMarks">প্রতি প্রশ্নের নম্বর</Label>
+                                    <Label htmlFor="saqMarks">{t('marks_per_question')}</Label>
                                     <Input type="number" id="saqMarks" value={config.saq.marks} onChange={handleQuestionConfigChange('saq', 'marks')} disabled={!config.saq.enabled} />
                                 </div>
                             </div>
@@ -295,11 +297,11 @@ function GeneratePatternComponent() {
                         <div className='p-4 border rounded-lg'>
                            <div className="flex items-center justify-between mb-2">
                                 <Label className="flex items-center gap-1 text-base">
-                                    বড় প্রশ্ন
+                                    {t('long_q_long')}
                                     <TooltipProvider>
                                         <Tooltip>
                                         <TooltipTrigger asChild><Info className="w-3 h-3 cursor-help" /></TooltipTrigger>
-                                        <TooltipContent><p>Long Answer Questions</p></TooltipContent>
+                                        <TooltipContent><p>{t('long_q_tooltip')}</p></TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
                                 </Label>
@@ -307,11 +309,11 @@ function GeneratePatternComponent() {
                            </div>
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="longCount">সংখ্যা</Label>
+                                    <Label htmlFor="longCount">{t('count')}</Label>
                                     <Input type="number" id="longCount" value={config.long.count} onChange={handleQuestionConfigChange('long', 'count')} disabled={!config.long.enabled} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="longMarks">প্রতি প্রশ্নের নম্বর</Label>
+                                    <Label htmlFor="longMarks">{t('marks_per_question')}</Label>
                                     <Input type="number" id="longMarks" value={config.long.marks} onChange={handleQuestionConfigChange('long', 'marks')} disabled={!config.long.enabled} />
                                 </div>
                             </div>
@@ -320,11 +322,11 @@ function GeneratePatternComponent() {
                         <div className='p-4 border rounded-lg'>
                            <div className="flex items-center justify-between mb-2">
                                <Label className="flex items-center gap-1 text-base">
-                                    সত্য/মিথ্যা
+                                    {t('true_false_long')}
                                     <TooltipProvider>
                                         <Tooltip>
                                         <TooltipTrigger asChild><Info className="w-3 h-3 cursor-help" /></TooltipTrigger>
-                                        <TooltipContent><p>True/False Questions</p></TooltipContent>
+                                        <TooltipContent><p>{t('true_false_tooltip')}</p></TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
                                 </Label>
@@ -332,11 +334,11 @@ function GeneratePatternComponent() {
                            </div>
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="trueFalseCount">সংখ্যা</Label>
+                                    <Label htmlFor="trueFalseCount">{t('count')}</Label>
                                     <Input type="number" id="trueFalseCount" value={config.trueFalse.count} onChange={handleQuestionConfigChange('trueFalse', 'count')} disabled={!config.trueFalse.enabled} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="trueFalseMarks">প্রতি প্রশ্নের নম্বর</Label>
+                                    <Label htmlFor="trueFalseMarks">{t('marks_per_question')}</Label>
                                     <Input type="number" id="trueFalseMarks" value={config.trueFalse.marks} onChange={handleQuestionConfigChange('trueFalse', 'marks')} disabled={!config.trueFalse.enabled} />
                                 </div>
                             </div>
@@ -345,11 +347,11 @@ function GeneratePatternComponent() {
                         <div className='p-4 border rounded-lg'>
                             <div className="flex items-center justify-between mb-2">
                                <Label className="flex items-center gap-1 text-base">
-                                    শূন্যস্থান পূরণ
+                                    {t('fill_blanks_long')}
                                     <TooltipProvider>
                                         <Tooltip>
                                         <TooltipTrigger asChild><Info className="w-3 h-3 cursor-help" /></TooltipTrigger>
-                                        <TooltipContent><p>Fill in the Blanks</p></TooltipContent>
+                                        <TooltipContent><p>{t('fill_blanks_tooltip')}</p></TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
                                 </Label>
@@ -357,11 +359,11 @@ function GeneratePatternComponent() {
                             </div>
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="fillInBlanksCount">সংখ্যা</Label>
+                                    <Label htmlFor="fillInBlanksCount">{t('count')}</Label>
                                     <Input type="number" id="fillInBlanksCount" value={config.fillInBlanks.count} onChange={handleQuestionConfigChange('fillInBlanks', 'count')} disabled={!config.fillInBlanks.enabled} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="fillInBlanksMarks">প্রতি প্রশ্নের নম্বর</Label>
+                                    <Label htmlFor="fillInBlanksMarks">{t('marks_per_question')}</Label>
                                     <Input type="number" id="fillInBlanksMarks" value={config.fillInBlanks.marks} onChange={handleQuestionConfigChange('fillInBlanks', 'marks')} disabled={!config.fillInBlanks.enabled} />
                                 </div>
                             </div>
@@ -370,11 +372,11 @@ function GeneratePatternComponent() {
                         <div className='p-4 border rounded-lg'>
                            <div className="flex items-center justify-between mb-2">
                                 <Label className="flex items-center gap-1 text-base">
-                                    রচনাধর্মী
+                                    {t('rochonadhormi_long')}
                                     <TooltipProvider>
                                         <Tooltip>
                                         <TooltipTrigger asChild><Info className="w-3 h-3 cursor-help" /></TooltipTrigger>
-                                        <TooltipContent><p>Essay Questions</p></TooltipContent>
+                                        <TooltipContent><p>{t('rochonadhormi_tooltip')}</p></TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
                                 </Label>
@@ -382,11 +384,11 @@ function GeneratePatternComponent() {
                            </div>
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="rochonadhormiCount">সংখ্যা</Label>
+                                    <Label htmlFor="rochonadhormiCount">{t('count')}</Label>
                                     <Input type="number" id="rochonadhormiCount" value={config.rochonadhormi.count} onChange={handleQuestionConfigChange('rochonadhormi', 'count')} disabled={!config.rochonadhormi.enabled} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="rochonadhormiMarks">প্রতি প্রশ্নের নম্বর</Label>
+                                    <Label htmlFor="rochonadhormiMarks">{t('marks_per_question')}</Label>
                                     <Input type="number" id="rochonadhormiMarks" value={config.rochonadhormi.marks} onChange={handleQuestionConfigChange('rochonadhormi', 'marks')} disabled={!config.rochonadhormi.enabled} />
                                 </div>
                             </div>
@@ -401,7 +403,7 @@ function GeneratePatternComponent() {
                         className="bg-amber-500 text-accent-foreground hover:bg-amber-600"
                         disabled={!atLeastOneQuestionTypeEnabled}
                     >
-                        পরবর্তী ধাপ
+                        {t('next_step')}
                         <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                 </CardFooter>

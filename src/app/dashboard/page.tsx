@@ -13,6 +13,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileSignature, Sigma } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '@/hooks/use-language';
 
 const questionTypeOrder = { 'MCQ': 1, 'SAQ': 2, 'True/False': 3, 'Fill in the Blanks': 4, 'Long': 5, 'Rochonadhormi': 6 };
 
@@ -21,6 +22,7 @@ function DashboardComponent() {
   const router = useRouter();
   const [config, setConfig] = useState<PaperConfig>(initialConfig);
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
+  const { t, lang } = useLanguage();
 
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
@@ -154,18 +156,24 @@ function DashboardComponent() {
     setSelectedQuestions(prev => sortQuestions([...prev, ...newQuestions]));
   };
 
+  const getBadgeText = (type: 'mcq' | 'saq' | 'long' | 'trueFalse' | 'fillInBlanks' | 'rochonadhormi') => {
+    const typeConfig = config[type];
+    const key = `badge_${type}` as const;
+    return t(key, { count: typeConfig.count, marks: typeConfig.marks });
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <Header />
       <main className="flex-1 w-full max-w-screen-2xl mx-auto p-4 md:p-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 no-print">
             <div>
-                <h1 className="font-headline text-3xl text-amber-400">প্রশ্নপত্র তৈরি করুন</h1>
-                <p className="text-muted-foreground">প্রশ্ন ভান্ডার থেকে প্রশ্ন নির্বাচন করুন অথবা AI দিয়ে তৈরি করুন।</p>
+                <h1 className="font-headline text-3xl text-amber-400">{t('create_paper_title')}</h1>
+                <p className="text-muted-foreground">{t('create_paper_desc')}</p>
             </div>
             <Button onClick={handleGoBack} variant="outline" className="w-full sm:w-auto">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                কাঠামো পরিবর্তন করুন
+                {t('change_structure')}
             </Button>
         </div>
         
@@ -176,24 +184,24 @@ function DashboardComponent() {
                     <div className="flex items-center gap-4">
                         <FileSignature className="w-8 h-8 text-amber-400" />
                         <div>
-                            <CardTitle className="font-headline text-2xl text-amber-400">আপনার কাঠামো</CardTitle>
-                            <CardDescription> বিষয়: {config.subject}, শ্রেণী: {config.class}</CardDescription>
+                            <CardTitle className="font-headline text-2xl text-amber-400">{t('your_structure')}</CardTitle>
+                            <CardDescription> {t('subject')}: {config.subject}, {t('class')}: {config.class}</CardDescription>
                         </div>
                     </div>
                 </CardHeader>
                 <CardContent className='pt-0 flex flex-col gap-4'>
                     <div className='flex flex-wrap gap-2'>
-                        {config.mcq.enabled && <Badge variant="secondary">MCQ: {config.mcq.count}টি x {config.mcq.marks} নম্বর</Badge>}
-                        {config.saq.enabled && <Badge variant="secondary">SAQ: {config.saq.count}টি x {config.saq.marks} নম্বর</Badge>}
-                        {config.long.enabled && <Badge variant="secondary">বড় প্রশ্ন: {config.long.count}টি x {config.long.marks} নম্বর</Badge>}
-                        {config.trueFalse.enabled && <Badge variant="secondary">সত্য/মিথ্যা: {config.trueFalse.count}টি x {config.trueFalse.marks} নম্বর</Badge>}
-                        {config.fillInBlanks.enabled && <Badge variant="secondary">শূন্যস্থান পূরণ: {config.fillInBlanks.count}টি x {config.fillInBlanks.marks} নম্বর</Badge>}
-                        {config.rochonadhormi.enabled && <Badge variant="secondary">রচনাধর্মী: {config.rochonadhormi.count}টি x {config.rochonadhormi.marks} নম্বর</Badge>}
+                        {config.mcq.enabled && <Badge variant="secondary">{getBadgeText('mcq')}</Badge>}
+                        {config.saq.enabled && <Badge variant="secondary">{getBadgeText('saq')}</Badge>}
+                        {config.long.enabled && <Badge variant="secondary">{getBadgeText('long')}</Badge>}
+                        {config.trueFalse.enabled && <Badge variant="secondary">{getBadgeText('trueFalse')}</Badge>}
+                        {config.fillInBlanks.enabled && <Badge variant="secondary">{getBadgeText('fillInBlanks')}</Badge>}
+                        {config.rochonadhormi.enabled && <Badge variant="secondary">{getBadgeText('rochonadhormi')}</Badge>}
                     </div>
                      <div className="flex items-center gap-2 text-right self-end">
                            <Sigma className="w-5 h-5 text-amber-400" />
                            <div>
-                            <p className='text-xs text-muted-foreground'>মোট নম্বর</p>
+                            <p className='text-xs text-muted-foreground'>{t('total_marks')}</p>
                             <p className='font-bold text-xl text-amber-400'>{totalMarks}</p>
                            </div>
                         </div>

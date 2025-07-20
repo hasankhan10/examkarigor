@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Printer, Trash2, X, FileText, Loader2 } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import GeneratePaperDialog from './GeneratePaperDialog';
+import { useLanguage } from '@/hooks/use-language';
 
 
 interface PaperPreviewProps {
@@ -24,6 +25,7 @@ interface PaperPreviewProps {
 export default function PaperPreview({ config, questions, totalMarks, onRemoveQuestion, onReset, onAddAiQuestions }: PaperPreviewProps) {
   const [isDownloading, setIsDownloading] = useState(false);
   const selectedTotalMarks = questions.reduce((sum, q) => sum + q.marks, 0);
+  const { t, lang } = useLanguage();
 
   const handleDownloadPdf = async () => {
     const paperContentElement = document.getElementById('paper-content');
@@ -94,12 +96,12 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
   }, {} as Record<Question['type'], Question[]>);
 
   const typeNames: Record<Question['type'], string> = {
-    'MCQ': 'সঠিক উত্তরটি নির্বাচন করো (MCQ)',
-    'SAQ': 'সংক্ষিপ্ত উত্তরভিত্তিক প্রশ্ন (SAQ)',
-    'Long': 'দীর্ঘ উত্তরভিত্তিক প্রশ্ন',
-    'True/False': 'সত্য/মিথ্যা নিরূপণ করো',
-    'Fill in the Blanks': 'শূন্যস্থান পূরণ করো',
-    'Rochonadhormi': 'রচনাধর্মী প্রশ্ন',
+    'MCQ': t('mcq_group_title'),
+    'SAQ': t('saq_group_title'),
+    'Long': t('long_group_title'),
+    'True/False': t('true_false_group_title'),
+    'Fill in the Blanks': t('fill_blanks_group_title'),
+    'Rochonadhormi': t('rochonadhormi_group_title'),
   };
   
   const questionTypeOrder: Question['type'][] = ['MCQ', 'SAQ', 'True/False', 'Fill in the Blanks', 'Long', 'Rochonadhormi'];
@@ -114,8 +116,8 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
               <div className="flex items-center gap-4">
                 <FileText className="w-8 h-8 text-amber-400" />
                 <div>
-                  <CardTitle className="font-headline text-2xl text-amber-400">প্রশ্নপত্রের পূর্বরূপ</CardTitle>
-                  <CardDescription>আপনার তৈরি করা প্রশ্নপত্রটি এখানে দেখুন</CardDescription>
+                  <CardTitle className="font-headline text-2xl text-amber-400">{t('paper_preview_title')}</CardTitle>
+                  <CardDescription>{t('paper_preview_desc')}</CardDescription>
                 </div>
               </div>
               <div className="no-print w-full sm:w-auto">
@@ -129,12 +131,12 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
               <h1 className="text-2xl font-bold font-headline print-text-black">{config.schoolName}</h1>
               <h2 className="text-xl font-semibold print-text-black">{config.examTerm}</h2>
               <div className="flex justify-center items-center gap-x-4">
-                <h3 className="text-lg print-text-black">{config.subject} পরীক্ষা</h3>
-                <h3 className="text-lg print-text-black">শ্রেণী: {config.class}</h3>
+                <h3 className="text-lg print-text-black">{config.subject} {t('exam')}</h3>
+                <h3 className="text-lg print-text-black">{t('class')}: {config.class}</h3>
               </div>
               <div className="flex justify-between text-sm pt-2 print-text-black">
-                <span>পূর্ণমান: {totalMarks}</span>
-                <span>সময়: {config.time}</span>
+                <span>{t('full_marks')}: {totalMarks}</span>
+                <span>{t('time')}: {config.time}</span>
               </div>
             </header>
             <div className="print-paper-content">
@@ -149,7 +151,7 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
 
                       return (
                         <div key={type}>
-                          <h3 className="text-lg font-headline font-bold mb-3 p-2 bg-primary/10 rounded-md print-text-black">{groupName} <span className="text-sm font-normal text-muted-foreground print-text-black">({group.length}টি প্রশ্ন, মোট {groupMarks} নম্বর)</span></h3>
+                          <h3 className="text-lg font-headline font-bold mb-3 p-2 bg-primary/10 rounded-md print-text-black">{groupName} <span className="text-sm font-normal text-muted-foreground print-text-black">({t('group_header', { count: group.length, marks: groupMarks })})</span></h3>
                           {group.map((q) => {
                              questionCounter++;
                              return (
@@ -158,7 +160,7 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
                                 <div className="flex-1">
                                   {q.alternatives.map((alt, altIndex) => (
                                     <div key={altIndex}>
-                                      {altIndex > 0 && <p className='font-bold my-1'>অথবা</p>}
+                                      {altIndex > 0 && <p className='font-bold my-1'>{t('or')}</p>}
                                       <p>{alt.text}</p>
                                       {alt.options && (
                                         <ol className="list-alpha list-inside grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
@@ -185,8 +187,8 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
                     })
                   ) : (
                     <div className="text-center text-muted-foreground py-16 no-print h-[calc(100vh-32rem)] min-h-96 flex flex-col justify-center items-center">
-                      <p>প্রশ্ন ভান্ডার থেকে প্রশ্ন যোগ করুন।</p>
-                      <p className="text-sm">আপনার নির্বাচিত প্রশ্নগুলি এখানে প্রদর্শিত হবে।</p>
+                      <p>{t('add_questions_from_bank')}</p>
+                      <p className="text-sm">{t('selected_questions_appear_here')}</p>
                     </div>
                   )}
                 </div>
@@ -195,16 +197,16 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
         </CardContent>
         <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4 no-print">
             <div className="text-lg font-bold">
-                <span className="text-muted-foreground">মোট:</span> <span className="text-amber-400">{selectedTotalMarks}</span> / {totalMarks}
+                <span className="text-muted-foreground">{t('total')}:</span> <span className="text-amber-400">{selectedTotalMarks}</span> / {totalMarks}
             </div>
             <div className="flex gap-2 w-full sm:w-auto">
                  <Button variant="outline" onClick={onReset} disabled={questions.length === 0} className="w-1/2 sm:w-auto">
                     <Trash2 className="mr-2 h-4 w-4" />
-                    রিসেট
+                    {t('reset')}
                 </Button>
                 <Button onClick={handleDownloadPdf} className="bg-amber-500 text-accent-foreground hover:bg-amber-600 w-1/2 sm:w-auto" disabled={questions.length === 0 || isDownloading}>
                     {isDownloading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Printer className="mr-2 h-4 w-4" />}
-                    {isDownloading ? 'ডাউনলোড হচ্ছে...' : 'প্রিন্ট / PDF'}
+                    {isDownloading ? t('downloading') : t('print_pdf')}
                 </Button>
             </div>
         </CardFooter>
