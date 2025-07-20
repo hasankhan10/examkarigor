@@ -100,7 +100,7 @@ export function Pricing({
     <div className="container py-20">
       <div className="text-center space-y-4 mb-12">
         <h2 className="text-5xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/70 sm:text-6xl">
-          আপনার জন্য <span className="bg-yellow-400 text-background px-2 rounded-md">সঠিক</span> প্ল্যান
+          আপনার জন্য সঠিক প্ল্যান
         </h2>
         <p className="text-muted-foreground text-lg whitespace-pre-line">
           {description}
