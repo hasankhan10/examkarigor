@@ -31,6 +31,10 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
 
     setIsDownloading(true);
 
+    // Temporarily hide all remove buttons before rendering
+    const removeButtons = paperContentElement.querySelectorAll('.remove-on-print');
+    removeButtons.forEach(btn => (btn as HTMLElement).style.display = 'none');
+
     try {
         const canvas = await html2canvas(paperContentElement, {
             scale: 2, // Increase scale for better resolution
@@ -44,6 +48,9 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
               });
             }
         });
+
+        // Show the buttons again after canvas is created
+        removeButtons.forEach(btn => (btn as HTMLElement).style.display = 'flex');
 
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF({
@@ -74,6 +81,8 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
         pdf.save('question-paper.pdf');
     } catch (error) {
         console.error("Could not generate PDF", error);
+         // Ensure buttons are shown even if an error occurs
+        removeButtons.forEach(btn => (btn as HTMLElement).style.display = 'flex');
     } finally {
         setIsDownloading(false);
     }
@@ -160,7 +169,7 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  className="w-6 h-6 text-red-500/70 hover:bg-red-500/10 hover:text-red-500 shrink-0 no-print"
+                                  className="w-6 h-6 text-red-500/70 hover:bg-red-500/10 hover:text-red-500 shrink-0 no-print remove-on-print"
                                   onClick={() => onRemoveQuestion(q.id)}
                                 >
                                   <X className="w-4 h-4" />
