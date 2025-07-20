@@ -27,6 +27,7 @@ const GenerateRandomPaperInputSchema = z.object({
   long: QuestionTypeDetailSchema.describe('Details for Long Questions.'),
   trueFalse: QuestionTypeDetailSchema.describe('Details for True/False Questions.'),
   fillInBlanks: QuestionTypeDetailSchema.describe('Details for Fill in the Blanks Questions.'),
+  rochonadhormi: QuestionTypeDetailSchema.describe('Details for Essay Questions.'),
 });
 
 export type GenerateRandomPaperInput = z.infer<typeof GenerateRandomPaperInputSchema>;
@@ -37,7 +38,7 @@ const SingleQuestionSchema = z.object({
 });
 
 const QuestionSchema = z.object({
-    type: z.enum(['MCQ', 'SAQ', 'Long', 'True/False', 'Fill in the Blanks']).describe('The type of question.'),
+    type: z.enum(['MCQ', 'SAQ', 'Long', 'True/False', 'Fill in the Blanks', 'Rochonadhormi']).describe('The type of question.'),
     alternatives: z.array(SingleQuestionSchema).describe('A list of alternative questions. Often just one, but can be more for "OR" questions.'),
     marks: z.number().describe('The marks for this question.'),
 });
@@ -81,6 +82,9 @@ Your primary goal is to generate the exact number of questions for each type as 
 - Fill in the Blanks Questions:
   - Number of questions: {{{fillInBlanks.count}}}
   - Marks per question: {{{fillInBlanks.marks}}}
+- Essay (Rochonadhormi) Questions:
+  - Number of questions: {{{rochonadhormi.count}}}
+  - Marks per question: {{{rochonadhormi.marks}}}
 
 This structure is a strict, non-negotiable requirement. You MUST generate exactly the specified number of questions for each type with the specified marks.
 
@@ -94,6 +98,7 @@ All questions and instructions should be in Bengali by default, using Unicode fo
 For MCQs, provide 4 distinct options.
 For True/False questions, the question text should be a statement to be evaluated. Do not include options.
 For Fill in the Blanks, use underscores (___) to indicate the blank space.
+For Rochonadhormi questions, provide a thoughtful, open-ended essay prompt.
 
 Return the output as a JSON object containing a list of questions.
 `,

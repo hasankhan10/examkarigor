@@ -14,7 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { FileSignature, Sigma } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-const questionTypeOrder = { 'MCQ': 1, 'SAQ': 2, 'True/False': 3, 'Fill in the Blanks': 4, 'Long': 5 };
+const questionTypeOrder = { 'MCQ': 1, 'SAQ': 2, 'True/False': 3, 'Fill in the Blanks': 4, 'Long': 5, 'Rochonadhormi': 6 };
 
 function DashboardComponent() {
   const searchParams = useSearchParams();
@@ -57,6 +57,11 @@ function DashboardComponent() {
           count: Number(params['fillInBlanks.count']) || initialConfig.fillInBlanks.count,
           marks: Number(params['fillInBlanks.marks']) || initialConfig.fillInBlanks.marks,
         },
+        rochonadhormi: {
+            enabled: params['rochonadhormi.enabled'] === 'true',
+            count: Number(params['rochonadhormi.count']) || initialConfig.rochonadhormi.count,
+            marks: Number(params['rochonadhormi.marks']) || initialConfig.rochonadhormi.marks,
+        }
       };
       setConfig(newConfig);
     } else {
@@ -69,7 +74,8 @@ function DashboardComponent() {
            (config.saq.enabled ? (config.saq.count * config.saq.marks) : 0) + 
            (config.long.enabled ? (config.long.count * config.long.marks) : 0) +
            (config.trueFalse.enabled ? (config.trueFalse.count * config.trueFalse.marks) : 0) +
-           (config.fillInBlanks.enabled ? (config.fillInBlanks.count * config.fillInBlanks.marks) : 0);
+           (config.fillInBlanks.enabled ? (config.fillInBlanks.count * config.fillInBlanks.marks) : 0) +
+           (config.rochonadhormi.enabled ? (config.rochonadhormi.count * config.rochonadhormi.marks) : 0);
   }, [config]);
   
   const filteredQuestions = useMemo(() => {
@@ -104,6 +110,9 @@ function DashboardComponent() {
         'fillInBlanks.enabled': String(config.fillInBlanks.enabled),
         'fillInBlanks.count': String(config.fillInBlanks.count),
         'fillInBlanks.marks': String(config.fillInBlanks.marks),
+        'rochonadhormi.enabled': String(config.rochonadhormi.enabled),
+        'rochonadhormi.count': String(config.rochonadhormi.count),
+        'rochonadhormi.marks': String(config.rochonadhormi.marks),
      });
     router.push(`/generate-pattern?${params.toString()}`);
   }
@@ -179,6 +188,7 @@ function DashboardComponent() {
                         {config.long.enabled && <Badge variant="secondary">বড় প্রশ্ন: {config.long.count}টি x {config.long.marks} নম্বর</Badge>}
                         {config.trueFalse.enabled && <Badge variant="secondary">সত্য/মিথ্যা: {config.trueFalse.count}টি x {config.trueFalse.marks} নম্বর</Badge>}
                         {config.fillInBlanks.enabled && <Badge variant="secondary">শূন্যস্থান পূরণ: {config.fillInBlanks.count}টি x {config.fillInBlanks.marks} নম্বর</Badge>}
+                        {config.rochonadhormi.enabled && <Badge variant="secondary">রচনাধর্মী: {config.rochonadhormi.count}টি x {config.rochonadhormi.marks} নম্বর</Badge>}
                     </div>
                      <div className="flex items-center gap-2 text-right self-end">
                            <Sigma className="w-5 h-5 text-amber-400" />

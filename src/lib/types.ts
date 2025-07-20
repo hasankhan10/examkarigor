@@ -5,7 +5,7 @@ export type QuestionTypeDetail = {
   marks: number;
 };
 
-export type QuestionType = 'mcq' | 'saq' | 'long' | 'trueFalse' | 'fillInBlanks';
+export type QuestionType = 'mcq' | 'saq' | 'long' | 'trueFalse' | 'fillInBlanks' | 'rochonadhormi';
 
 export type PaperConfig = {
   schoolName: string;
@@ -19,6 +19,7 @@ export type PaperConfig = {
   long: QuestionTypeDetail;
   trueFalse: QuestionTypeDetail;
   fillInBlanks: QuestionTypeDetail;
+  rochonadhormi: QuestionTypeDetail;
 };
 
 export type SingleQuestion = {
@@ -31,7 +32,7 @@ export type Question = {
   class: string;
   subject: string;
   chapter: string;
-  type: 'MCQ' | 'SAQ' | 'Long' | 'True/False' | 'Fill in the Blanks';
+  type: 'MCQ' | 'SAQ' | 'Long' | 'True/False' | 'Fill in the Blanks' | 'Rochonadhormi';
   alternatives: SingleQuestion[];
   marks: number;
 };

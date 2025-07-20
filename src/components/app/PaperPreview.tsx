@@ -99,9 +99,10 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
     'Long': 'দীর্ঘ উত্তরভিত্তিক প্রশ্ন',
     'True/False': 'সত্য/মিথ্যা নিরূপণ করো',
     'Fill in the Blanks': 'শূন্যস্থান পূরণ করো',
+    'Rochonadhormi': 'রচনাধর্মী প্রশ্ন',
   };
   
-  const questionTypeOrder: Question['type'][] = ['MCQ', 'SAQ', 'True/False', 'Fill in the Blanks', 'Long'];
+  const questionTypeOrder: Question['type'][] = ['MCQ', 'SAQ', 'True/False', 'Fill in the Blanks', 'Long', 'Rochonadhormi'];
 
   let questionCounter = 0;
 

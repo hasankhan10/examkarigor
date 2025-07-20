@@ -51,6 +51,10 @@ function GeneratePatternComponent() {
         newConfig.fillInBlanks.enabled = params['fillInBlanks.enabled'] === 'true';
         newConfig.fillInBlanks.count = Number(params['fillInBlanks.count']) || initialConfig.fillInBlanks.count;
         newConfig.fillInBlanks.marks = Number(params['fillInBlanks.marks']) || initialConfig.fillInBlanks.marks;
+
+        newConfig.rochonadhormi.enabled = params['rochonadhormi.enabled'] === 'true';
+        newConfig.rochonadhormi.count = Number(params['rochonadhormi.count']) || initialConfig.rochonadhormi.count;
+        newConfig.rochonadhormi.marks = Number(params['rochonadhormi.marks']) || initialConfig.rochonadhormi.marks;
         
         // Ensure subject is valid for the class
         const availableSubjectsForClass = Object.keys(subjectDetails).filter(sub => subjectDetails[sub].classes.includes(newConfig.class));
@@ -73,11 +77,12 @@ function GeneratePatternComponent() {
            (config.saq.enabled ? (config.saq.count * config.saq.marks) : 0) + 
            (config.long.enabled ? (config.long.count * config.long.marks) : 0) +
            (config.trueFalse.enabled ? (config.trueFalse.count * config.trueFalse.marks) : 0) +
-           (config.fillInBlanks.enabled ? (config.fillInBlanks.count * config.fillInBlanks.marks) : 0);
+           (config.fillInBlanks.enabled ? (config.fillInBlanks.count * config.fillInBlanks.marks) : 0) +
+           (config.rochonadhormi.enabled ? (config.rochonadhormi.count * config.rochonadhormi.marks) : 0);
   }, [config]);
 
   const atLeastOneQuestionTypeEnabled = useMemo(() => {
-    return config.mcq.enabled || config.saq.enabled || config.long.enabled || config.trueFalse.enabled || config.fillInBlanks.enabled;
+    return config.mcq.enabled || config.saq.enabled || config.long.enabled || config.trueFalse.enabled || config.fillInBlanks.enabled || config.rochonadhormi.enabled;
   }, [config]);
 
   const handleSelectChange = (name: 'class' | 'subject' | 'chapter') => (value: string) => {
@@ -149,6 +154,9 @@ function GeneratePatternComponent() {
         'fillInBlanks.enabled': String(config.fillInBlanks.enabled),
         'fillInBlanks.count': String(config.fillInBlanks.count),
         'fillInBlanks.marks': String(config.fillInBlanks.marks),
+        'rochonadhormi.enabled': String(config.rochonadhormi.enabled),
+        'rochonadhormi.count': String(config.rochonadhormi.count),
+        'rochonadhormi.marks': String(config.rochonadhormi.marks),
     });
     router.push(`/dashboard?${params.toString()}`);
   };
@@ -359,6 +367,31 @@ function GeneratePatternComponent() {
                             </div>
                         </div>
 
+                        <div className='p-4 border rounded-lg'>
+                           <div className="flex items-center justify-between mb-2">
+                                <Label className="flex items-center gap-1 text-base">
+                                    রচনাধর্মী
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                        <TooltipTrigger asChild><Info className="w-3 h-3 cursor-help" /></TooltipTrigger>
+                                        <TooltipContent><p>Essay Questions</p></TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                </Label>
+                                <Switch checked={config.rochonadhormi.enabled} onCheckedChange={handleToggleChange('rochonadhormi')} />
+                           </div>
+                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="rochonadhormiCount">সংখ্যা</Label>
+                                    <Input type="number" id="rochonadhormiCount" value={config.rochonadhormi.count} onChange={handleQuestionConfigChange('rochonadhormi', 'count')} disabled={!config.rochonadhormi.enabled} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="rochonadhormiMarks">প্রতি প্রশ্নের নম্বর</Label>
+                                    <Input type="number" id="rochonadhormiMarks" value={config.rochonadhormi.marks} onChange={handleQuestionConfigChange('rochonadhormi', 'marks')} disabled={!config.rochonadhormi.enabled} />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </CardContent>
                 <CardFooter className="flex justify-end">
@@ -385,7 +418,3 @@ export default function GeneratePatternPage() {
         </Suspense>
     )
 }
-
-    
-
-    

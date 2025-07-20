@@ -13,6 +13,7 @@ export const initialConfig: PaperConfig = {
   long: { enabled: false, count: 0, marks: 0 },
   trueFalse: { enabled: false, count: 0, marks: 0 },
   fillInBlanks: { enabled: false, count: 0, marks: 0 },
+  rochonadhormi: { enabled: false, count: 0, marks: 0 },
 };
 
 export const classList = ['5', '6', '7', '8', '9', '10', '11', '12'];
@@ -238,5 +239,14 @@ export const questionBank: Question[] = [
     type: 'Fill in the Blanks',
     alternatives: [{ text: 'ভারত সভা প্রতিষ্ঠিত হয় ________ সালে।' }],
     marks: 1,
+  },
+  {
+    id: 10,
+    class: '10',
+    subject: 'বাংলা',
+    chapter: 'জ্ঞানচক্ষু',
+    type: 'Rochonadhormi',
+    alternatives: [{ text: '"রত্নের মূল্য জহুরীর কাছেই" - ‘জ্ঞানচক্ষু’ গল্প অবলম্বনে মন্তব্যটির তাৎপর্য বিশ্লেষণ করো।' }],
+    marks: 10,
   },
 ];
