@@ -33,22 +33,27 @@ function DashboardComponent() {
         subject: params.subject || initialConfig.subject,
         chapter: params.chapter || initialConfig.chapter,
         mcq: {
+          enabled: params['mcq.enabled'] === 'true',
           count: Number(params['mcq.count']) || initialConfig.mcq.count,
           marks: Number(params['mcq.marks']) || initialConfig.mcq.marks,
         },
         saq: {
+          enabled: params['saq.enabled'] === 'true',
           count: Number(params['saq.count']) || initialConfig.saq.count,
           marks: Number(params['saq.marks']) || initialConfig.saq.marks,
         },
         long: {
+          enabled: params['long.enabled'] === 'true',
           count: Number(params['long.count']) || initialConfig.long.count,
           marks: Number(params['long.marks']) || initialConfig.long.marks,
         },
         trueFalse: {
+          enabled: params['trueFalse.enabled'] === 'true',
           count: Number(params['trueFalse.count']) || initialConfig.trueFalse.count,
           marks: Number(params['trueFalse.marks']) || initialConfig.trueFalse.marks,
         },
         fillInBlanks: {
+          enabled: params['fillInBlanks.enabled'] === 'true',
           count: Number(params['fillInBlanks.count']) || initialConfig.fillInBlanks.count,
           marks: Number(params['fillInBlanks.marks']) || initialConfig.fillInBlanks.marks,
         },
@@ -60,11 +65,11 @@ function DashboardComponent() {
   }, [searchParams, router]);
 
   const totalMarks = useMemo(() => {
-    return (config.mcq.count * config.mcq.marks) + 
-           (config.saq.count * config.saq.marks) + 
-           (config.long.count * config.long.marks) +
-           (config.trueFalse.count * config.trueFalse.marks) +
-           (config.fillInBlanks.count * config.fillInBlanks.marks);
+    return (config.mcq.enabled ? (config.mcq.count * config.mcq.marks) : 0) + 
+           (config.saq.enabled ? (config.saq.count * config.saq.marks) : 0) + 
+           (config.long.enabled ? (config.long.count * config.long.marks) : 0) +
+           (config.trueFalse.enabled ? (config.trueFalse.count * config.trueFalse.marks) : 0) +
+           (config.fillInBlanks.enabled ? (config.fillInBlanks.count * config.fillInBlanks.marks) : 0);
   }, [config]);
   
   const filteredQuestions = useMemo(() => {
@@ -84,14 +89,19 @@ function DashboardComponent() {
         class: config.class,
         subject: config.subject,
         chapter: config.chapter,
+        'mcq.enabled': String(config.mcq.enabled),
         'mcq.count': String(config.mcq.count),
         'mcq.marks': String(config.mcq.marks),
+        'saq.enabled': String(config.saq.enabled),
         'saq.count': String(config.saq.count),
         'saq.marks': String(config.saq.marks),
+        'long.enabled': String(config.long.enabled),
         'long.count': String(config.long.count),
         'long.marks': String(config.long.marks),
+        'trueFalse.enabled': String(config.trueFalse.enabled),
         'trueFalse.count': String(config.trueFalse.count),
         'trueFalse.marks': String(config.trueFalse.marks),
+        'fillInBlanks.enabled': String(config.fillInBlanks.enabled),
         'fillInBlanks.count': String(config.fillInBlanks.count),
         'fillInBlanks.marks': String(config.fillInBlanks.marks),
      });
@@ -164,11 +174,11 @@ function DashboardComponent() {
                 </CardHeader>
                 <CardContent className='pt-0 flex flex-col gap-4'>
                     <div className='flex flex-wrap gap-2'>
-                        <Badge variant="secondary">MCQ: {config.mcq.count}টি x {config.mcq.marks} নম্বর</Badge>
-                        <Badge variant="secondary">SAQ: {config.saq.count}টি x {config.saq.marks} নম্বর</Badge>
-                        <Badge variant="secondary">বড় প্রশ্ন: {config.long.count}টি x {config.long.marks} নম্বর</Badge>
-                        <Badge variant="secondary">সত্য/মিথ্যা: {config.trueFalse.count}টি x {config.trueFalse.marks} নম্বর</Badge>
-                        <Badge variant="secondary">শূন্যস্থান পূরণ: {config.fillInBlanks.count}টি x {config.fillInBlanks.marks} নম্বর</Badge>
+                        {config.mcq.enabled && <Badge variant="secondary">MCQ: {config.mcq.count}টি x {config.mcq.marks} নম্বর</Badge>}
+                        {config.saq.enabled && <Badge variant="secondary">SAQ: {config.saq.count}টি x {config.saq.marks} নম্বর</Badge>}
+                        {config.long.enabled && <Badge variant="secondary">বড় প্রশ্ন: {config.long.count}টি x {config.long.marks} নম্বর</Badge>}
+                        {config.trueFalse.enabled && <Badge variant="secondary">সত্য/মিথ্যা: {config.trueFalse.count}টি x {config.trueFalse.marks} নম্বর</Badge>}
+                        {config.fillInBlanks.enabled && <Badge variant="secondary">শূন্যস্থান পূরণ: {config.fillInBlanks.count}টি x {config.fillInBlanks.marks} নম্বর</Badge>}
                     </div>
                      <div className="flex items-center gap-2 text-right self-end">
                            <Sigma className="w-5 h-5 text-amber-400" />

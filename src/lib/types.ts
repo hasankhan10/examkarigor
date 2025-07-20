@@ -1,3 +1,12 @@
+
+export type QuestionTypeDetail = {
+  enabled: boolean;
+  count: number;
+  marks: number;
+};
+
+export type QuestionType = 'mcq' | 'saq' | 'long' | 'trueFalse' | 'fillInBlanks';
+
 export type PaperConfig = {
   schoolName: string;
   examTerm: string;
@@ -5,11 +14,11 @@ export type PaperConfig = {
   class: string;
   subject: string;
   chapter: string;
-  mcq: { count: number; marks: number };
-  saq: { count: number; marks: number };
-  long: { count: number; marks: number };
-  trueFalse: { count: number; marks: number };
-  fillInBlanks: { count: number; marks: number };
+  mcq: QuestionTypeDetail;
+  saq: QuestionTypeDetail;
+  long: QuestionTypeDetail;
+  trueFalse: QuestionTypeDetail;
+  fillInBlanks: QuestionTypeDetail;
 };
 
 export type SingleQuestion = {
