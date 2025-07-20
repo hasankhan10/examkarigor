@@ -109,17 +109,18 @@ function GeneratePatternComponent() {
   };
 
   const handleToggleChange = (type: QuestionType) => (checked: boolean) => {
-    setConfig(prev => ({
-        ...prev,
-        [type]: {
-            ...prev[type],
-            enabled: checked,
-            // Reset count and marks if disabled
-            count: checked ? prev[type].count : 0,
-            marks: checked ? prev[type].marks : 0,
+    setConfig(prev => {
+        const newTypeConfig = { ...prev[type], enabled: checked };
+        if (!checked) {
+            newTypeConfig.count = 0;
+            newTypeConfig.marks = 0;
         }
-    }));
-  };
+        return {
+            ...prev,
+            [type]: newTypeConfig
+        };
+    });
+};
   
   const handleSubmit = () => {
     const params = new URLSearchParams({

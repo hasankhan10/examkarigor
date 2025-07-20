@@ -8,11 +8,11 @@ export const initialConfig: PaperConfig = {
   class: '10',
   subject: 'গণিত',
   chapter: 'all',
-  mcq: { enabled: false, count: 10, marks: 1 },
-  saq: { enabled: false, count: 10, marks: 2 },
-  long: { enabled: false, count: 8, marks: 5 },
-  trueFalse: { enabled: false, count: 5, marks: 1 },
-  fillInBlanks: { enabled: false, count: 5, marks: 1 },
+  mcq: { enabled: false, count: 0, marks: 0 },
+  saq: { enabled: false, count: 0, marks: 0 },
+  long: { enabled: false, count: 0, marks: 0 },
+  trueFalse: { enabled: false, count: 0, marks: 0 },
+  fillInBlanks: { enabled: false, count: 0, marks: 0 },
 };
 
 export const classList = ['5', '6', '7', '8', '9', '10', '11', '12'];
