@@ -205,8 +205,8 @@ function GeneratePatternComponent() {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="subject">বিষয়</Label>
-                            <Select name="subject" value={config.subject} onValueChange={handleSelectChange('subject')}>
-                                <SelectTrigger id="subject" disabled={!availableSubjects.length}><SelectValue /></SelectTrigger>
+                            <Select name="subject" value={config.subject} onValueChange={handleSelectChange('subject')} disabled={!config.class || availableSubjects.length === 0}>
+                                <SelectTrigger id="subject"><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                 {availableSubjects.length > 0 ? availableSubjects.map((sub) => (
                                     <SelectItem key={sub} value={sub}>{sub}</SelectItem>
@@ -218,8 +218,8 @@ function GeneratePatternComponent() {
 
                     <div className="space-y-2">
                         <Label htmlFor="chapter">অধ্যায়</Label>
-                        <Select name="chapter" value={config.chapter} onValueChange={handleSelectChange('chapter')}>
-                            <SelectTrigger id="chapter" disabled={!availableChapters.length}><SelectValue /></SelectTrigger>
+                        <Select name="chapter" value={config.chapter} onValueChange={handleSelectChange('chapter')} disabled={!config.subject || availableChapters.length === 0}>
+                            <SelectTrigger id="chapter"><SelectValue /></SelectTrigger>
                             <SelectContent>
                             <SelectItem value="all">সমস্ত অধ্যায়</SelectItem>
                             {availableChapters.map((chap) => (
@@ -376,3 +376,5 @@ export default function GeneratePatternPage() {
         </Suspense>
     )
 }
+
+    
