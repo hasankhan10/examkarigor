@@ -71,7 +71,8 @@ export default function GeneratePaperDialog({ config, onAccept }: GeneratePaperD
     setIsLoading(true);
     setGeneratedQuestions(null);
     try {
-      const result = await generateRandomPaper({ ...config, difficulty });
+      const language = config.subject === 'English' ? 'English' : 'Bengali';
+      const result = await generateRandomPaper({ ...config, difficulty, language });
       setGeneratedQuestions(result.questions);
       toast({
         title: "আপনার মাস্টারপিস প্রস্তুত!",

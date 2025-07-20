@@ -22,6 +22,7 @@ const GenerateRandomPaperInputSchema = z.object({
   subject: z.string().describe('The subject for which to generate the exam paper (e.g., Bengali, Math, Science).'),
   chapter: z.string().describe('The chapter for which to generate the exam paper (e.g., specific topics within the subject).'),
   difficulty: z.number().min(0).max(100).describe('The difficulty level of the questions on a scale of 0 to 100, where 0 is easiest and 100 is hardest. This is a crucial parameter.'),
+  language: z.string().describe('The language for the exam paper (e.g., "Bengali", "English"). This dictates the language of the generated questions.'),
   mcq: QuestionTypeDetailSchema.describe('Details for Multiple Choice Questions.'),
   saq: QuestionTypeDetailSchema.describe('Details for Short Answer Questions.'),
   long: QuestionTypeDetailSchema.describe('Details for Long Questions.'),
@@ -57,7 +58,9 @@ const generateRandomPaperPrompt = ai.definePrompt({
   name: 'generateRandomPaperPrompt',
   input: {schema: GenerateRandomPaperInputSchema},
   output: {schema: GenerateRandomPaperOutputSchema},
-  prompt: `You are an expert teacher specializing in creating exam papers for Bengali medium students in West Bengal, India.
+  prompt: `You are an expert teacher specializing in creating exam papers for students in West Bengal, India.
+
+**IMPORTANT: The entire question paper, including all question text, options, and instructions, MUST be in the '{{{language}}}' language.**
 
 You will generate a random exam paper based on the following criteria:
 
@@ -94,7 +97,7 @@ The questions MUST be of the specified '{{{difficulty}}}' difficulty level (0 is
 For some questions, you can provide an alternative "OR" question by adding a second item to the 'alternatives' array for that question.
 
 The generated questions must be pertinent to the syllabus of the WBBSE/WBCHSE board.
-All questions and instructions should be in Bengali by default, using Unicode for Bengali script.
+If the language is Bengali, use Unicode for Bengali script.
 For MCQs, provide 4 distinct options.
 For True/False questions, the question text should be a statement to be evaluated. Do not include options.
 For Fill in the Blanks, use underscores (___) to indicate the blank space.
