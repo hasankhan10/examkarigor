@@ -8,6 +8,8 @@ export type PaperConfig = {
   mcq: { count: number; marks: number };
   saq: { count: number; marks: number };
   long: { count: number; marks: number };
+  trueFalse: { count: number; marks: number };
+  fillInBlanks: { count: number; marks: number };
 };
 
 export type SingleQuestion = {
@@ -20,7 +22,7 @@ export type Question = {
   class: string;
   subject: string;
   chapter: string;
-  type: 'MCQ' | 'SAQ' | 'Long';
+  type: 'MCQ' | 'SAQ' | 'Long' | 'True/False' | 'Fill in the Blanks';
   alternatives: SingleQuestion[];
   marks: number;
 };

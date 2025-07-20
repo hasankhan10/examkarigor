@@ -36,6 +36,11 @@ function GeneratePatternComponent() {
         newConfig.saq.marks = Number(params['saq.marks']) || initialConfig.saq.marks;
         newConfig.long.count = Number(params['long.count']) || initialConfig.long.count;
         newConfig.long.marks = Number(params['long.marks']) || initialConfig.long.marks;
+        newConfig.trueFalse.count = Number(params['trueFalse.count']) || initialConfig.trueFalse.count;
+        newConfig.trueFalse.marks = Number(params['trueFalse.marks']) || initialConfig.trueFalse.marks;
+        newConfig.fillInBlanks.count = Number(params['fillInBlanks.count']) || initialConfig.fillInBlanks.count;
+        newConfig.fillInBlanks.marks = Number(params['fillInBlanks.marks']) || initialConfig.fillInBlanks.marks;
+
         
         // Ensure subject is valid for the class
         const availableSubjectsForClass = Object.keys(subjectDetails).filter(sub => subjectDetails[sub].classes.includes(newConfig.class));
@@ -56,7 +61,9 @@ function GeneratePatternComponent() {
   const totalMarks = useMemo(() => {
     return (config.mcq.count * config.mcq.marks) + 
            (config.saq.count * config.saq.marks) + 
-           (config.long.count * config.long.marks);
+           (config.long.count * config.long.marks) +
+           (config.trueFalse.count * config.trueFalse.marks) +
+           (config.fillInBlanks.count * config.fillInBlanks.marks);
   }, [config]);
 
   const handleSelectChange = (name: 'class' | 'subject' | 'chapter') => (value: string) => {
@@ -80,7 +87,7 @@ function GeneratePatternComponent() {
     setConfig(prev => ({ ...prev, [name]: value }));
   };
   
-  const handleQuestionConfigChange = (type: 'mcq' | 'saq' | 'long', field: 'count' | 'marks') => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQuestionConfigChange = (type: 'mcq' | 'saq' | 'long' | 'trueFalse' | 'fillInBlanks', field: 'count' | 'marks') => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value) || 0;
     setConfig(prev => ({
         ...prev,
@@ -105,6 +112,10 @@ function GeneratePatternComponent() {
         'saq.marks': String(config.saq.marks),
         'long.count': String(config.long.count),
         'long.marks': String(config.long.marks),
+        'trueFalse.count': String(config.trueFalse.count),
+        'trueFalse.marks': String(config.trueFalse.marks),
+        'fillInBlanks.count': String(config.fillInBlanks.count),
+        'fillInBlanks.marks': String(config.fillInBlanks.marks),
     });
     router.push(`/dashboard?${params.toString()}`);
   };
@@ -255,6 +266,51 @@ function GeneratePatternComponent() {
                                 </div>
                             </div>
                         </div>
+                        
+                        <div className='p-4 border rounded-lg'>
+                           <Label className="flex items-center gap-1 mb-2 text-base">
+                                সত্য/মিথ্যা
+                                <TooltipProvider>
+                                    <Tooltip>
+                                    <TooltipTrigger asChild><Info className="w-3 h-3 cursor-help" /></TooltipTrigger>
+                                    <TooltipContent><p>True/False Questions</p></TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </Label>
+                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="trueFalseCount">সংখ্যা</Label>
+                                    <Input type="number" id="trueFalseCount" value={config.trueFalse.count} onChange={handleQuestionConfigChange('trueFalse', 'count')} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="trueFalseMarks">প্রতি প্রশ্নের নম্বর</Label>
+                                    <Input type="number" id="trueFalseMarks" value={config.trueFalse.marks} onChange={handleQuestionConfigChange('trueFalse', 'marks')} />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className='p-4 border rounded-lg'>
+                           <Label className="flex items-center gap-1 mb-2 text-base">
+                                শূন্যস্থান পূরণ
+                                <TooltipProvider>
+                                    <Tooltip>
+                                    <TooltipTrigger asChild><Info className="w-3 h-3 cursor-help" /></TooltipTrigger>
+                                    <TooltipContent><p>Fill in the Blanks</p></TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </Label>
+                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="fillInBlanksCount">সংখ্যা</Label>
+                                    <Input type="number" id="fillInBlanksCount" value={config.fillInBlanks.count} onChange={handleQuestionConfigChange('fillInBlanks', 'count')} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="fillInBlanksMarks">প্রতি প্রশ্নের নম্বর</Label>
+                                    <Input type="number" id="fillInBlanksMarks" value={config.fillInBlanks.marks} onChange={handleQuestionConfigChange('fillInBlanks', 'marks')} />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </CardContent>
                 <CardFooter className="flex justify-end">

@@ -11,6 +11,8 @@ export const initialConfig: PaperConfig = {
   mcq: { count: 10, marks: 1 },
   saq: { count: 10, marks: 2 },
   long: { count: 8, marks: 5 },
+  trueFalse: { count: 5, marks: 1 },
+  fillInBlanks: { count: 5, marks: 1 },
 };
 
 export const classList = ['5', '6', '7', '8', '9', '10', '11', '12'];
@@ -217,5 +219,24 @@ export const questionBank: Question[] = [
     type: 'Long',
     alternatives: [{ text: 'যদি a + b + c = 0 হয়, তবে দেখাও যে, 1/(xᵇ+x⁻ᶜ+1) + 1/(xᶜ+x⁻ᵃ+1) + 1/(xᵃ+x⁻ᵇ+1) = 1' }],
     marks: 5,
+  },
+  // Class 10 History
+  {
+    id: 8,
+    class: '10',
+    subject: 'ইতিহাস',
+    chapter: 'সংস্কার: বৈশিষ্ট্য ও পর্যালোচনা',
+    type: 'True/False',
+    alternatives: [{ text: 'সতীদাহ প্রথা রদ করেন লর্ড উইলিয়াম বেন্টিঙ্ক।' }],
+    marks: 1,
+  },
+  {
+    id: 9,
+    class: '10',
+    subject: 'ইতিহাস',
+    chapter: 'সংঘবদ্ধতার গোড়ার কথা',
+    type: 'Fill in the Blanks',
+    alternatives: [{ text: 'ভারত সভা প্রতিষ্ঠিত হয় ________ সালে।' }],
+    marks: 1,
   },
 ];

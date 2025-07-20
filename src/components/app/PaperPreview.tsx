@@ -97,9 +97,11 @@ export default function PaperPreview({ config, questions, totalMarks, onRemoveQu
     'MCQ': 'সঠিক উত্তরটি নির্বাচন করো (MCQ)',
     'SAQ': 'সংক্ষিপ্ত উত্তরভিত্তিক প্রশ্ন (SAQ)',
     'Long': 'দীর্ঘ উত্তরভিত্তিক প্রশ্ন',
+    'True/False': 'সত্য/মিথ্যা নিরূপণ করো',
+    'Fill in the Blanks': 'শূন্যস্থান পূরণ করো',
   };
   
-  const questionTypeOrder: Question['type'][] = ['MCQ', 'SAQ', 'Long'];
+  const questionTypeOrder: Question['type'][] = ['MCQ', 'SAQ', 'True/False', 'Fill in the Blanks', 'Long'];
 
   let questionCounter = 0;
 

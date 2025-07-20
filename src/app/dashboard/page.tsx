@@ -14,7 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { FileSignature, Sigma } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-const questionTypeOrder = { 'MCQ': 1, 'SAQ': 2, 'Long': 3 };
+const questionTypeOrder = { 'MCQ': 1, 'SAQ': 2, 'True/False': 3, 'Fill in the Blanks': 4, 'Long': 5 };
 
 function DashboardComponent() {
   const searchParams = useSearchParams();
@@ -44,6 +44,14 @@ function DashboardComponent() {
           count: Number(params['long.count']) || initialConfig.long.count,
           marks: Number(params['long.marks']) || initialConfig.long.marks,
         },
+        trueFalse: {
+          count: Number(params['trueFalse.count']) || initialConfig.trueFalse.count,
+          marks: Number(params['trueFalse.marks']) || initialConfig.trueFalse.marks,
+        },
+        fillInBlanks: {
+          count: Number(params['fillInBlanks.count']) || initialConfig.fillInBlanks.count,
+          marks: Number(params['fillInBlanks.marks']) || initialConfig.fillInBlanks.marks,
+        },
       };
       setConfig(newConfig);
     } else {
@@ -54,7 +62,9 @@ function DashboardComponent() {
   const totalMarks = useMemo(() => {
     return (config.mcq.count * config.mcq.marks) + 
            (config.saq.count * config.saq.marks) + 
-           (config.long.count * config.long.marks);
+           (config.long.count * config.long.marks) +
+           (config.trueFalse.count * config.trueFalse.marks) +
+           (config.fillInBlanks.count * config.fillInBlanks.marks);
   }, [config]);
   
   const filteredQuestions = useMemo(() => {
@@ -80,14 +90,18 @@ function DashboardComponent() {
         'saq.marks': String(config.saq.marks),
         'long.count': String(config.long.count),
         'long.marks': String(config.long.marks),
+        'trueFalse.count': String(config.trueFalse.count),
+        'trueFalse.marks': String(config.trueFalse.marks),
+        'fillInBlanks.count': String(config.fillInBlanks.count),
+        'fillInBlanks.marks': String(config.fillInBlanks.marks),
      });
     router.push(`/generate-pattern?${params.toString()}`);
   }
 
   const sortQuestions = (questions: Question[]) => {
     return [...questions].sort((a, b) => {
-      const typeA = questionTypeOrder[a.type] || 4;
-      const typeB = questionTypeOrder[b.type] || 4;
+      const typeA = questionTypeOrder[a.type] || 99;
+      const typeB = questionTypeOrder[b.type] || 99;
       if (typeA !== typeB) {
         return typeA - typeB;
       }
@@ -153,6 +167,8 @@ function DashboardComponent() {
                         <Badge variant="secondary">MCQ: {config.mcq.count}টি x {config.mcq.marks} নম্বর</Badge>
                         <Badge variant="secondary">SAQ: {config.saq.count}টি x {config.saq.marks} নম্বর</Badge>
                         <Badge variant="secondary">বড় প্রশ্ন: {config.long.count}টি x {config.long.marks} নম্বর</Badge>
+                        <Badge variant="secondary">সত্য/মিথ্যা: {config.trueFalse.count}টি x {config.trueFalse.marks} নম্বর</Badge>
+                        <Badge variant="secondary">শূন্যস্থান পূরণ: {config.fillInBlanks.count}টি x {config.fillInBlanks.marks} নম্বর</Badge>
                     </div>
                      <div className="flex items-center gap-2 text-right self-end">
                            <Sigma className="w-5 h-5 text-amber-400" />

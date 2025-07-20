@@ -25,6 +25,8 @@ const GenerateRandomPaperInputSchema = z.object({
   mcq: QuestionTypeDetailSchema.describe('Details for Multiple Choice Questions.'),
   saq: QuestionTypeDetailSchema.describe('Details for Short Answer Questions.'),
   long: QuestionTypeDetailSchema.describe('Details for Long Questions.'),
+  trueFalse: QuestionTypeDetailSchema.describe('Details for True/False Questions.'),
+  fillInBlanks: QuestionTypeDetailSchema.describe('Details for Fill in the Blanks Questions.'),
 });
 
 export type GenerateRandomPaperInput = z.infer<typeof GenerateRandomPaperInputSchema>;
@@ -35,7 +37,7 @@ const SingleQuestionSchema = z.object({
 });
 
 const QuestionSchema = z.object({
-    type: z.enum(['MCQ', 'SAQ', 'Long']).describe('The type of question.'),
+    type: z.enum(['MCQ', 'SAQ', 'Long', 'True/False', 'Fill in the Blanks']).describe('The type of question.'),
     alternatives: z.array(SingleQuestionSchema).describe('A list of alternative questions. Often just one, but can be more for "OR" questions.'),
     marks: z.number().describe('The marks for this question.'),
 });
@@ -73,10 +75,16 @@ Your primary goal is to generate the exact number of questions for each type as 
 - Long Questions:
   - Number of questions: {{{long.count}}}
   - Marks per question: {{{long.marks}}}
+- True/False Questions:
+  - Number of questions: {{{trueFalse.count}}}
+  - Marks per question: {{{trueFalse.marks}}}
+- Fill in the Blanks Questions:
+  - Number of questions: {{{fillInBlanks.count}}}
+  - Marks per question: {{{fillInBlanks.marks}}}
 
-This structure is a strict, non-negotiable requirement. You MUST generate exactly {{{mcq.count}}} MCQ questions, each worth {{{mcq.marks}}} marks. You MUST generate exactly {{{saq.count}}} SAQ questions, each worth {{{saq.marks}}} marks. You MUST generate exactly {{{long.count}}} Long questions, each worth {{{long.marks}}} marks.
+This structure is a strict, non-negotiable requirement. You MUST generate exactly the specified number of questions for each type with the specified marks.
 
-The total marks for the paper will be ({{{mcq.count}}} * {{{mcq.marks}}}) + ({{{saq.count}}} * {{{saq.marks}}}) + ({{{long.count}}} * {{{long.marks}}}). Your generated question set MUST match this structure perfectly.
+The total marks for the paper will be the sum of all questions. Your generated question set MUST match this structure perfectly.
 The questions MUST be of the specified '{{{difficulty}}}' difficulty level (0 is easiest, 100 is hardest). This is extremely important.
 
 For some questions, you can provide an alternative "OR" question by adding a second item to the 'alternatives' array for that question.
@@ -84,6 +92,8 @@ For some questions, you can provide an alternative "OR" question by adding a sec
 The generated questions must be pertinent to the syllabus of the WBBSE/WBCHSE board.
 All questions and instructions should be in Bengali by default, using Unicode for Bengali script.
 For MCQs, provide 4 distinct options.
+For True/False questions, the question text should be a statement to be evaluated. Do not include options.
+For Fill in the Blanks, use underscores (___) to indicate the blank space.
 
 Return the output as a JSON object containing a list of questions.
 `,
