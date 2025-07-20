@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { subjectDetails, classList } from '@/lib/mock-data';
 import type { PaperConfig } from '@/lib/types';
@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import Header from '@/components/app/Header';
 import { initialConfig } from '@/lib/mock-data';
 
-export default function GeneratePatternPage() {
+function GeneratePatternComponent() {
   const [config, setConfig] = useState<PaperConfig>(initialConfig);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -92,7 +92,7 @@ export default function GeneratePatternPage() {
   };
   
   const handleSubmit = () => {
-    const params = {
+    const params = new URLSearchParams({
         schoolName: config.schoolName,
         examTerm: config.examTerm,
         time: config.time,
@@ -105,9 +105,8 @@ export default function GeneratePatternPage() {
         'saq.marks': String(config.saq.marks),
         'long.count': String(config.long.count),
         'long.marks': String(config.long.marks),
-    };
-    const query = new URLSearchParams(params).toString();
-    router.push(`/dashboard?${query}`);
+    });
+    router.push(`/dashboard?${params.toString()}`);
   };
 
   const availableSubjects = Object.keys(subjectDetails).filter(sub => subjectDetails[sub].classes.includes(config.class));
@@ -268,4 +267,12 @@ export default function GeneratePatternPage() {
         </main>
     </div>
   );
+}
+
+export default function GeneratePatternPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <GeneratePatternComponent />
+        </Suspense>
+    )
 }
