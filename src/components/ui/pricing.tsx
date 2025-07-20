@@ -99,7 +99,7 @@ export function Pricing({
   return (
     <div className="container py-20">
       <div className="text-center space-y-4 mb-12">
-        <h2 className="text-4xl font-headline font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/70 sm:text-5xl">
+        <h2 className="text-5xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/70 sm:text-6xl">
           {title}
         </h2>
         <p className="text-muted-foreground text-lg whitespace-pre-line">
@@ -152,7 +152,7 @@ export function Pricing({
                   <div className="absolute top-[18px] right-[-34px] w-[120px] transform rotate-45 bg-amber-500 py-1 px-3 text-center flex items-center justify-center gap-1 z-10">
                     <Star className="text-background h-4 w-4 fill-current" />
                     <span className="text-background text-sm font-semibold">
-                      জনপ্রিয়
+                      সবচেয়ে জনপ্রিয়
                     </span>
                   </div>
                 </div>
