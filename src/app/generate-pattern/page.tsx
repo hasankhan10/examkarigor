@@ -127,6 +127,7 @@ function GeneratePatternComponent() {
   const handleToggleChange = (type: QuestionType) => (checked: boolean) => {
     setConfig(prev => {
         const newTypeConfig = { ...prev[type], enabled: checked };
+        // When disabling, reset count and marks to 0
         if (!checked) {
             newTypeConfig.count = 0;
             newTypeConfig.marks = 0;
@@ -147,23 +148,23 @@ function GeneratePatternComponent() {
         subject: config.subject,
         chapter: config.chapter.join(','),
         'mcq.enabled': String(config.mcq.enabled),
-        'mcq.count': String(config.mcq.count),
-        'mcq.marks': String(config.mcq.marks),
+        'mcq.count': String(config.mcq.enabled ? config.mcq.count : 0),
+        'mcq.marks': String(config.mcq.enabled ? config.mcq.marks : 0),
         'saq.enabled': String(config.saq.enabled),
-        'saq.count': String(config.saq.count),
-        'saq.marks': String(config.saq.marks),
+        'saq.count': String(config.saq.enabled ? config.saq.count : 0),
+        'saq.marks': String(config.saq.enabled ? config.saq.marks : 0),
         'long.enabled': String(config.long.enabled),
-        'long.count': String(config.long.count),
-        'long.marks': String(config.long.marks),
+        'long.count': String(config.long.enabled ? config.long.count : 0),
+        'long.marks': String(config.long.enabled ? config.long.marks : 0),
         'trueFalse.enabled': String(config.trueFalse.enabled),
-        'trueFalse.count': String(config.trueFalse.count),
-        'trueFalse.marks': String(config.trueFalse.marks),
+        'trueFalse.count': String(config.trueFalse.enabled ? config.trueFalse.count : 0),
+        'trueFalse.marks': String(config.trueFalse.enabled ? config.trueFalse.marks : 0),
         'fillInBlanks.enabled': String(config.fillInBlanks.enabled),
-        'fillInBlanks.count': String(config.fillInBlanks.count),
-        'fillInBlanks.marks': String(config.fillInBlanks.marks),
+        'fillInBlanks.count': String(config.fillInBlanks.enabled ? config.fillInBlanks.count : 0),
+        'fillInBlanks.marks': String(config.fillInBlanks.enabled ? config.fillInBlanks.marks : 0),
         'rochonadhormi.enabled': String(config.rochonadhormi.enabled),
-        'rochonadhormi.count': String(config.rochonadhormi.count),
-        'rochonadhormi.marks': String(config.rochonadhormi.marks),
+        'rochonadhormi.count': String(config.rochonadhormi.enabled ? config.rochonadhormi.count : 0),
+        'rochonadhormi.marks': String(config.rochonadhormi.enabled ? config.rochonadhormi.marks : 0),
     });
     router.push(`/dashboard?${params.toString()}`);
   };
