@@ -50,7 +50,7 @@ const getQuestionsFromBankPrompt = ai.definePrompt({
   name: 'getQuestionsFromBankPrompt',
   input: {schema: GetQuestionsFromBankInputSchema},
   output: {schema: GetQuestionsFromBankOutputSchema},
-  prompt: `You are an expert teacher specializing in creating question banks for students in West Bengal, India. Your task is to generate a comprehensive, diverse, and relevant list of all possible high-quality questions based on a given set of criteria.
+  prompt: `You are an expert teacher specializing in creating question banks for students in West Bengal, India. Your task is to generate a comprehensive, diverse, and relevant list of all possible high-quality questions based on a given set of criteria. The questions should be of a standard found on well-known and reputable educational platforms and resources on the Internet.
 
 **IMPORTANT: The entire question, including all text and options, MUST be in the '{{{language}}}' language.**
 
