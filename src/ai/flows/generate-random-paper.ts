@@ -13,6 +13,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const QuestionTypeDetailSchema = z.object({
+  enabled: z.boolean().describe('Whether this question type is enabled.'),
   count: z.number().describe('The number of questions of this type.'),
   marks: z.number().describe('The marks allocated to each question of this type.'),
 });
@@ -69,25 +70,38 @@ Subject: {{{subject}}}
 Chapters: {{#each chapter}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 Difficulty Level (0-100): {{{difficulty}}}
 
-Your primary goal is to generate the exact number of questions for each type as specified below, with the specified marks for each question.
+Your primary goal is to generate the exact number of questions for each type as specified below, with the specified marks for each question. Only generate questions for the types that are explicitly requested.
+
+{{#if mcq.enabled}}
 - Multiple Choice Questions (MCQ):
   - Number of questions: {{{mcq.count}}}
   - Marks per question: {{{mcq.marks}}}
+{{/if}}
+{{#if saq.enabled}}
 - Short Answer Questions (SAQ):
   - Number of questions: {{{saq.count}}}
   - Marks per question: {{{saq.marks}}}
+{{/if}}
+{{#if long.enabled}}
 - Long Questions:
   - Number of questions: {{{long.count}}}
   - Marks per question: {{{long.marks}}}
+{{/if}}
+{{#if trueFalse.enabled}}
 - True/False Questions:
   - Number of questions: {{{trueFalse.count}}}
   - Marks per question: {{{trueFalse.marks}}}
+{{/if}}
+{{#if fillInBlanks.enabled}}
 - Fill in the Blanks Questions:
   - Number of questions: {{{fillInBlanks.count}}}
   - Marks per question: {{{fillInBlanks.marks}}}
+{{/if}}
+{{#if rochonadhormi.enabled}}
 - Essay (Rochonadhormi) Questions:
   - Number of questions: {{{rochonadhormi.count}}}
   - Marks per question: {{{rochonadhormi.marks}}}
+{{/if}}
 
 This structure is a strict, non-negotiable requirement. You MUST generate exactly the specified number of questions for each type with the specified marks.
 
