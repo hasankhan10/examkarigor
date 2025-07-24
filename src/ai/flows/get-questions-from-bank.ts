@@ -60,7 +60,8 @@ Subject: {{{subject}}}
 Chapters: {{#each chapters}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 Question Types to Generate: {{#each questionTypes}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 
-For each specified question type, please generate a comprehensive and diverse list of questions. Do not limit the number of questions; provide as many unique and high-quality questions as possible that are relevant to the specified chapters.
+For each specified question type, please generate a comprehensive and diverse list of questions. Do not limit the number of questions; provide as many unique and high-quality questions as possible that are relevant to the specified chapters. Your main goal is to be exhaustive. A list with only 10-15 questions is not acceptable; aim for a much larger number to provide a rich and comprehensive bank for the teacher.
+
 The questions MUST be from the specified chapters only. For each generated question, specify which chapter it belongs to in the 'chapter' field.
 The questions must be pertinent to the syllabus of the WBBSE/WBCHSE board.
 
