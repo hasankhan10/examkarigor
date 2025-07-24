@@ -114,7 +114,7 @@ function GeneratePatternComponent() {
   };
   
   const handleQuestionConfigChange = (type: QuestionType, field: 'count' | 'marks') => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value) || 0;
+    const value = Math.max(0, parseInt(e.target.value) || 0);
     setConfig(prev => ({
         ...prev,
         [type]: {
@@ -265,11 +265,11 @@ function GeneratePatternComponent() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="mcqCount">{t('count')}</Label>
-                                    <Input type="number" id="mcqCount" value={config.mcq.count} onChange={handleQuestionConfigChange('mcq', 'count')} disabled={!config.mcq.enabled} />
+                                    <Input type="number" id="mcqCount" value={config.mcq.count} onChange={handleQuestionConfigChange('mcq', 'count')} disabled={!config.mcq.enabled} min="0" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="mcqMarks">{t('marks_per_question')}</Label>
-                                    <Input type="number" id="mcqMarks" value={config.mcq.marks} onChange={handleQuestionConfigChange('mcq', 'marks')} disabled={!config.mcq.enabled} />
+                                    <Input type="number" id="mcqMarks" value={config.mcq.marks} onChange={handleQuestionConfigChange('mcq', 'marks')} disabled={!config.mcq.enabled} min="0" />
                                 </div>
                             </div>
                         </div>
@@ -290,11 +290,11 @@ function GeneratePatternComponent() {
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="saqCount">{t('count')}</Label>
-                                    <Input type="number" id="saqCount" value={config.saq.count} onChange={handleQuestionConfigChange('saq', 'count')} disabled={!config.saq.enabled} />
+                                    <Input type="number" id="saqCount" value={config.saq.count} onChange={handleQuestionConfigChange('saq', 'count')} disabled={!config.saq.enabled} min="0" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="saqMarks">{t('marks_per_question')}</Label>
-                                    <Input type="number" id="saqMarks" value={config.saq.marks} onChange={handleQuestionConfigChange('saq', 'marks')} disabled={!config.saq.enabled} />
+                                    <Input type="number" id="saqMarks" value={config.saq.marks} onChange={handleQuestionConfigChange('saq', 'marks')} disabled={!config.saq.enabled} min="0" />
                                 </div>
                             </div>
                         </div>
@@ -315,11 +315,11 @@ function GeneratePatternComponent() {
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="longCount">{t('count')}</Label>
-                                    <Input type="number" id="longCount" value={config.long.count} onChange={handleQuestionConfigChange('long', 'count')} disabled={!config.long.enabled} />
+                                    <Input type="number" id="longCount" value={config.long.count} onChange={handleQuestionConfigChange('long', 'count')} disabled={!config.long.enabled} min="0" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="longMarks">{t('marks_per_question')}</Label>
-                                    <Input type="number" id="longMarks" value={config.long.marks} onChange={handleQuestionConfigChange('long', 'marks')} disabled={!config.long.enabled} />
+                                    <Input type="number" id="longMarks" value={config.long.marks} onChange={handleQuestionConfigChange('long', 'marks')} disabled={!config.long.enabled} min="0" />
                                 </div>
                             </div>
                         </div>
@@ -340,11 +340,11 @@ function GeneratePatternComponent() {
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="trueFalseCount">{t('count')}</Label>
-                                    <Input type="number" id="trueFalseCount" value={config.trueFalse.count} onChange={handleQuestionConfigChange('trueFalse', 'count')} disabled={!config.trueFalse.enabled} />
+                                    <Input type="number" id="trueFalseCount" value={config.trueFalse.count} onChange={handleQuestionConfigChange('trueFalse', 'count')} disabled={!config.trueFalse.enabled} min="0" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="trueFalseMarks">{t('marks_per_question')}</Label>
-                                    <Input type="number" id="trueFalseMarks" value={config.trueFalse.marks} onChange={handleQuestionConfigChange('trueFalse', 'marks')} disabled={!config.trueFalse.enabled} />
+                                    <Input type="number" id="trueFalseMarks" value={config.trueFalse.marks} onChange={handleQuestionConfigChange('trueFalse', 'marks')} disabled={!config.trueFalse.enabled} min="0" />
                                 </div>
                             </div>
                         </div>
@@ -365,11 +365,11 @@ function GeneratePatternComponent() {
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="fillInBlanksCount">{t('count')}</Label>
-                                    <Input type="number" id="fillInBlanksCount" value={config.fillInBlanks.count} onChange={handleQuestionConfigChange('fillInBlanks', 'count')} disabled={!config.fillInBlanks.enabled} />
+                                    <Input type="number" id="fillInBlanksCount" value={config.fillInBlanks.count} onChange={handleQuestionConfigChange('fillInBlanks', 'count')} disabled={!config.fillInBlanks.enabled} min="0" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="fillInBlanksMarks">{t('marks_per_question')}</Label>
-                                    <Input type="number" id="fillInBlanksMarks" value={config.fillInBlanks.marks} onChange={handleQuestionConfigChange('fillInBlanks', 'marks')} disabled={!config.fillInBlanks.enabled} />
+                                    <Input type="number" id="fillInBlanksMarks" value={config.fillInBlanks.marks} onChange={handleQuestionConfigChange('fillInBlanks', 'marks')} disabled={!config.fillInBlanks.enabled} min="0" />
                                 </div>
                             </div>
                         </div>
@@ -390,11 +390,11 @@ function GeneratePatternComponent() {
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="rochonadhormiCount">{t('count')}</Label>
-                                    <Input type="number" id="rochonadhormiCount" value={config.rochonadhormi.count} onChange={handleQuestionConfigChange('rochonadhormi', 'count')} disabled={!config.rochonadhormi.enabled} />
+                                    <Input type="number" id="rochonadhormiCount" value={config.rochonadhormi.count} onChange={handleQuestionConfigChange('rochonadhormi', 'count')} disabled={!config.rochonadhormi.enabled} min="0" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="rochonadhormiMarks">{t('marks_per_question')}</Label>
-                                    <Input type="number" id="rochonadhormiMarks" value={config.rochonadhormi.marks} onChange={handleQuestionConfigChange('rochonadhormi', 'marks')} disabled={!config.rochonadhormi.enabled} />
+                                    <Input type="number" id="rochonadhormiMarks" value={config.rochonadhormi.marks} onChange={handleQuestionConfigChange('rochonadhormi', 'marks')} disabled={!config.rochonadhormi.enabled} min="0" />
                                 </div>
                             </div>
                         </div>
