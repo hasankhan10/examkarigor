@@ -22,11 +22,11 @@ const questionTypeOrder = { 'MCQ': 1, 'SAQ': 2, 'True/False': 3, 'Fill in the Bl
 function DashboardComponent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { t, lang } = useLanguage();
   const [config, setConfig] = useState<PaperConfig>(initialConfig);
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const [bankQuestions, setBankQuestions] = useState<Question[]>([]);
   const [isBankLoading, setIsBankLoading] = useState(true);
-  const { t, lang } = useLanguage();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -136,7 +136,8 @@ function DashboardComponent() {
     };
 
     fetchBankQuestions();
-  }, [config, lang, toast, t]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config, lang]);
 
   const totalMarks = useMemo(() => {
     return (config.mcq.enabled ? (config.mcq.count * config.mcq.marks) : 0) + 
