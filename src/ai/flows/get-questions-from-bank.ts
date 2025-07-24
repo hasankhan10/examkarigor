@@ -60,7 +60,7 @@ Subject: {{{subject}}}
 Chapters: {{#each chapters}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 Question Types to Generate: {{#each questionTypes}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 
-For each specified question type, please generate a comprehensive and diverse list of questions. Do not limit the number of questions; provide as many unique and high-quality questions as possible that are relevant to the specified chapters. Your main goal is to be exhaustive. A list with only 10-15 questions is not acceptable; aim for a much larger number to provide a rich and comprehensive bank for the teacher.
+For each specified question type in the "Question Types to Generate" list, please generate a comprehensive and diverse list of questions. Do not generate questions for any type that is NOT in that list. Your main goal is to be exhaustive for the requested types. A list with only 10-15 questions is not acceptable; aim for a much larger number to provide a rich and comprehensive bank for the teacher.
 
 The questions MUST be from the specified chapters only. For each generated question, specify which chapter it belongs to in the 'chapter' field.
 The questions must be pertinent to the syllabus of the WBBSE/WBCHSE board.
@@ -83,7 +83,7 @@ const getQuestionsFromBankFlow = ai.defineFlow(
   },
   async input => {
     // If no chapters are selected, return an empty list to avoid generating generic questions.
-    if (input.chapters.length === 0) {
+    if (input.chapters.length === 0 || input.questionTypes.length === 0) {
       return { questions: [] };
     }
     const {output} = await getQuestionsFromBankPrompt(input);
