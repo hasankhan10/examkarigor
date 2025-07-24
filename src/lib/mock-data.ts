@@ -62,7 +62,7 @@ export const subjectDetails: SubjectDetails = {
     classes: ['5'],
     chapters: { '5': ['মানবদেহ', 'পরিবেশ ও জীবজগৎ', 'পদার্থ ও শক্তি', 'পরিবেশ ও সম্পদ', 'পরিবেশ দূষণ', 'সাধারণ রোগ ও তার প্রতিকার'] }
   },
-  'Bhasa Path': {
+  'ভাষা পাঠ': {
     classes: ['5'],
     chapters: {
       '5': []
