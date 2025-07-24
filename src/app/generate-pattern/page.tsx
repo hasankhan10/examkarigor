@@ -84,8 +84,21 @@ function GeneratePatternComponent() {
            (config.rochonadhormi.enabled ? (config.rochonadhormi.count * config.rochonadhormi.marks) : 0);
   }, [config]);
 
-  const atLeastOneQuestionTypeEnabled = useMemo(() => {
-    return config.mcq.enabled || config.saq.enabled || config.long.enabled || config.trueFalse.enabled || config.fillInBlanks.enabled || config.rochonadhormi.enabled;
+  const isFormValid = useMemo(() => {
+    const questionTypes: QuestionType[] = ['mcq', 'saq', 'long', 'trueFalse', 'fillInBlanks', 'rochonadhormi'];
+    const enabledTypes = questionTypes.filter(type => config[type].enabled);
+
+    if (enabledTypes.length === 0) {
+      return false; // No question type is enabled
+    }
+
+    // Check if any enabled type has a count of 0
+    const hasZeroCount = enabledTypes.some(type => config[type].count === 0);
+    if (hasZeroCount) {
+      return false;
+    }
+
+    return true;
   }, [config]);
 
   const handleSelectChange = (name: 'class' | 'subject') => (value: string) => {
@@ -131,6 +144,14 @@ function GeneratePatternComponent() {
         if (!checked) {
             newTypeConfig.count = 0;
             newTypeConfig.marks = 0;
+        } else {
+            // When enabling, if count is 0, set it to 1
+            if(newTypeConfig.count === 0) {
+                newTypeConfig.count = 1;
+            }
+            if(newTypeConfig.marks === 0) {
+                newTypeConfig.marks = 1;
+            }
         }
         return {
             ...prev,
@@ -140,6 +161,8 @@ function GeneratePatternComponent() {
 };
   
   const handleSubmit = () => {
+    if (!isFormValid) return; // Extra guard
+    
     const params = new URLSearchParams({
         schoolName: config.schoolName,
         examTerm: config.examTerm,
@@ -406,7 +429,7 @@ function GeneratePatternComponent() {
                         onClick={handleSubmit} 
                         size="lg" 
                         className="bg-amber-500 text-accent-foreground hover:bg-amber-600"
-                        disabled={!atLeastOneQuestionTypeEnabled}
+                        disabled={!isFormValid}
                     >
                         {t('next_step')}
                         <ArrowRight className="ml-2 h-5 w-5" />
@@ -425,3 +448,5 @@ export default function GeneratePatternPage() {
         </Suspense>
     )
 }
+
+    
