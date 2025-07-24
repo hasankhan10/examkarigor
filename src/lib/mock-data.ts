@@ -35,7 +35,7 @@ export const subjectDetails: SubjectDetails = {
   'English': {
     classes: ['5', '6', '7', '8', '9', '10', '11', '12'],
     chapters: {
-      '5': ["Gandhi the Mahatma", "A Feat on Feet", "My School Days", "The Clever Monkey", "The Rebel Poet", "A Day in the Zoo", "Phulmani's India", "Memory in Marble", "The land of the Pharaohs"],
+      '5': ["India: Superpower in Cricket", "A Feat on Feet", "Phulmani’s India", "Memory in Marble", "My School Days", "The Clever Monkey", "The Rebel Poet", "Buildings to Remember", "The Bird’s Eye", "A Great Social Reformer", "The Finishing Point", "Beyond Barriers"],
       '6': ["It All Began with Drip-Drip", "The Adventurous Clown", "The Rainbow", "The Shop That Never Was", "Land of the Scribes", "How the Little Kite Learned to Fly", "The Magic Fish Bone", "Goodbye to the Moon", "I Will Go With My Father a-Ploughing", "Smart Ice-Cream", "The Blind Boy"],
       '7': ["The Book of Nature", "We are Seven", "The Story of Proserpine", "The Beauty and the Beast", "Uncle Podger Hangs a Picture", "The Vagabond", "Mowgli Among the Wolves", "Srinivasa Ramanujan", "J. C. Bose", "The Ax"],
       '8': ["The Wind Cap", "Clouds", "An April Day", "The Great Escape", "Princess September", "The Sea", "A King's Tale", "The Happy Prince", "Summer Friends"],
