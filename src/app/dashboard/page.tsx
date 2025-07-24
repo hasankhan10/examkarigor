@@ -14,7 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { FileSignature, Sigma } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/hooks/use-language';
-import { getQuestionsFromBank, GetQuestionsFromBankOutput } from '@/ai/flows/get-questions-from-bank';
+import { getQuestionsFromBank } from '@/ai/flows/get-questions-from-bank';
 import { useToast } from '@/hooks/use-toast';
 
 const questionTypeOrder = { 'MCQ': 1, 'SAQ': 2, 'True/False': 3, 'Fill in the Blanks': 4, 'Long': 5, 'Rochonadhormi': 6 };
@@ -112,7 +112,6 @@ function DashboardComponent() {
                 chapters: config.chapter,
                 questionTypes: requestedTypes,
                 language: lang === 'bn' ? 'Bengali' : 'English',
-                countPerType: 15 // Fetch 15 questions per type for a rich bank
             });
 
             const newBankQuestions: Question[] = result.questions.map((q, index) => ({

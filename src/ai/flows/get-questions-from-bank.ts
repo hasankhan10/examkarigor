@@ -20,7 +20,6 @@ const GetQuestionsFromBankInputSchema = z.object({
   chapters: z.array(z.string()).describe('The chapters for which to generate the exam paper (e.g., specific topics within the subject).'),
   questionTypes: z.array(QuestionTypeEnum).describe('The types of questions to be generated.'),
   language: z.string().describe('The language for the exam paper (e.g., "Bengali", "English"). This dictates the language of the generated questions.'),
-  countPerType: z.number().describe('The number of questions to generate for each type.')
 });
 
 export type GetQuestionsFromBankInput = z.infer<typeof GetQuestionsFromBankInputSchema>;
@@ -51,7 +50,7 @@ const getQuestionsFromBankPrompt = ai.definePrompt({
   name: 'getQuestionsFromBankPrompt',
   input: {schema: GetQuestionsFromBankInputSchema},
   output: {schema: GetQuestionsFromBankOutputSchema},
-  prompt: `You are an expert teacher specializing in creating question banks for students in West Bengal, India. Your task is to generate a diverse and relevant list of questions based on a given set of criteria.
+  prompt: `You are an expert teacher specializing in creating question banks for students in West Bengal, India. Your task is to generate a comprehensive, diverse, and relevant list of all possible high-quality questions based on a given set of criteria.
 
 **IMPORTANT: The entire question, including all text and options, MUST be in the '{{{language}}}' language.**
 
@@ -61,7 +60,7 @@ Subject: {{{subject}}}
 Chapters: {{#each chapters}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 Question Types to Generate: {{#each questionTypes}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 
-For each specified question type, please generate exactly {{{countPerType}}} unique and high-quality questions.
+For each specified question type, please generate a comprehensive and diverse list of questions. Do not limit the number of questions; provide as many unique and high-quality questions as possible that are relevant to the specified chapters.
 The questions MUST be from the specified chapters only. For each generated question, specify which chapter it belongs to in the 'chapter' field.
 The questions must be pertinent to the syllabus of the WBBSE/WBCHSE board.
 
@@ -90,3 +89,4 @@ const getQuestionsFromBankFlow = ai.defineFlow(
     return output!;
   }
 );
+
