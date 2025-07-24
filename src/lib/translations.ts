@@ -60,6 +60,7 @@ export const translations = {
         marks_badge: "{{marks}} নম্বর",
         no_questions_found: "কোনো প্রশ্ন পাওয়া যায়নি।",
         try_changing_class_subject: "অনুগ্রহ করে আপনার শ্রেণী বা বিষয় পরিবর্তন করে দেখুন।",
+        ai_question_bank_loading: "প্রশ্ন ভান্ডার লোড হচ্ছে...",
 
         // Paper Preview
         paper_preview_title: "প্রশ্নপত্রের পূর্বরূপ",
@@ -164,7 +165,8 @@ export const translations = {
         marks_badge: "{{marks}} marks",
         no_questions_found: "No questions found.",
         try_changing_class_subject: "Please try changing the class or subject.",
-        
+        ai_question_bank_loading: "Loading Question Bank...",
+
         // Paper Preview
         paper_preview_title: "Paper Preview",
         paper_preview_desc: "See your generated paper here",

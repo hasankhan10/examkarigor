@@ -3,17 +3,19 @@
 
 import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import type { PaperConfig, Question, AiQuestion } from '@/lib/types';
-import { initialConfig, questionBank } from '@/lib/mock-data';
+import type { PaperConfig, Question, AiQuestion, QuestionTypeDetail } from '@/lib/types';
+import { initialConfig } from '@/lib/mock-data';
 import Header from '@/components/app/Header';
 import QuestionBank from '@/components/app/QuestionBank';
 import PaperPreview from '@/components/app/PaperPreview';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileSignature, Sigma } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/hooks/use-language';
+import { getQuestionsFromBank, GetQuestionsFromBankOutput } from '@/ai/flows/get-questions-from-bank';
+import { useToast } from '@/hooks/use-toast';
 
 const questionTypeOrder = { 'MCQ': 1, 'SAQ': 2, 'True/False': 3, 'Fill in the Blanks': 4, 'Long': 5, 'Rochonadhormi': 6 };
 
@@ -22,7 +24,10 @@ function DashboardComponent() {
   const router = useRouter();
   const [config, setConfig] = useState<PaperConfig>(initialConfig);
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
+  const [bankQuestions, setBankQuestions] = useState<Question[]>([]);
+  const [isBankLoading, setIsBankLoading] = useState(true);
   const { t, lang } = useLanguage();
+  const { toast } = useToast();
 
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
@@ -71,6 +76,68 @@ function DashboardComponent() {
     }
   }, [searchParams, router]);
 
+  useEffect(() => {
+    if (!config.class || !config.subject) return;
+
+    const fetchBankQuestions = async () => {
+        setIsBankLoading(true);
+        setBankQuestions([]);
+
+        const requestedTypes = (Object.keys(config) as Array<keyof PaperConfig>)
+            .filter(key => {
+                const detail = config[key] as QuestionTypeDetail;
+                return detail && typeof detail.enabled === 'boolean' && detail.enabled;
+            })
+            .map(type => {
+                switch(type) {
+                    case 'mcq': return 'MCQ';
+                    case 'saq': return 'SAQ';
+                    case 'long': return 'Long';
+                    case 'trueFalse': return 'True/False';
+                    case 'fillInBlanks': return 'Fill in the Blanks';
+                    case 'rochonadhormi': return 'Rochonadhormi';
+                    default: return null;
+                }
+            }).filter(Boolean) as ('MCQ' | 'SAQ' | 'Long' | 'True/False' | 'Fill in the Blanks' | 'Rochonadhormi')[];
+
+        if (requestedTypes.length === 0 || config.chapter.length === 0) {
+            setIsBankLoading(false);
+            return;
+        }
+
+        try {
+            const result = await getQuestionsFromBank({
+                class: config.class,
+                subject: config.subject,
+                chapters: config.chapter,
+                questionTypes: requestedTypes,
+                language: lang === 'bn' ? 'Bengali' : 'English',
+                countPerType: 15 // Fetch 15 questions per type for a rich bank
+            });
+
+            const newBankQuestions: Question[] = result.questions.map((q, index) => ({
+                ...q,
+                id: Date.now() + index, // Assign a unique ID
+                class: config.class,
+                subject: config.subject,
+            }));
+
+            setBankQuestions(newBankQuestions);
+        } catch (error) {
+            console.error("Failed to fetch question bank:", error);
+            toast({
+                variant: 'destructive',
+                title: t('toast_error_title'),
+                description: "প্রশ্ন ভান্ডার লোড করা যায়নি।",
+            });
+        } finally {
+            setIsBankLoading(false);
+        }
+    };
+
+    fetchBankQuestions();
+  }, [config, lang, toast, t]);
+
   const totalMarks = useMemo(() => {
     return (config.mcq.enabled ? (config.mcq.count * config.mcq.marks) : 0) + 
            (config.saq.enabled ? (config.saq.count * config.saq.marks) : 0) + 
@@ -79,15 +146,6 @@ function DashboardComponent() {
            (config.fillInBlanks.enabled ? (config.fillInBlanks.count * config.fillInBlanks.marks) : 0) +
            (config.rochonadhormi.enabled ? (config.rochonadhormi.count * config.rochonadhormi.marks) : 0);
   }, [config]);
-  
-  const filteredQuestions = useMemo(() => {
-    return questionBank.filter(
-      (q) =>
-        q.subject === config.subject &&
-        q.class === config.class &&
-        (config.chapter.length === 0 || config.chapter.includes(q.chapter))
-    );
-  }, [config.subject, config.class, config.chapter]);
   
   const handleGoBack = () => {
      const params = new URLSearchParams({
@@ -131,7 +189,6 @@ function DashboardComponent() {
   };
 
   const handleAddQuestion = (question: Question) => {
-    // Prevent adding duplicates
     if (!selectedQuestions.find(q => q.id === question.id)) {
       setSelectedQuestions(prev => sortQuestions([...prev, question]));
     }
@@ -148,10 +205,10 @@ function DashboardComponent() {
   const handleAddAiQuestions = (aiQuestions: AiQuestion[]) => {
     const newQuestions: Question[] = aiQuestions.map((q, index) => ({
       ...q,
-      id: Date.now() + index, // Create a unique ID
+      id: Date.now() + index,
       class: config.class,
       subject: config.subject,
-      chapter: "AI Generated", // This can be a single string
+      chapter: "AI Generated",
     }));
     setSelectedQuestions(prev => sortQuestions([...prev, ...newQuestions]));
   };
@@ -208,7 +265,8 @@ function DashboardComponent() {
                 </CardContent>
             </Card>
             <QuestionBank
-              questions={filteredQuestions}
+              questions={bankQuestions}
+              isLoading={isBankLoading}
               onAddQuestion={handleAddQuestion}
               selectedIds={selectedQuestions.map(q => q.id)}
             />
